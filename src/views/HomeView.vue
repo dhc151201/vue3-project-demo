@@ -1,18 +1,27 @@
 <script setup lang="ts">
 import useRequest from "@/hooks/useRequest";
-import { apiLogin } from "@/https/user"
-const { loading, run: Login } = useRequest(apiLogin, {
+import API from "@/https"
+const { loading, run, cancel } = useRequest(API.Login, {
   manual: true,
-  defaultParams: { a: 1 }
+  defaultParams: { a: 1 },
+  debounceInterval: 3000
 })
 
 setTimeout(() => {
-  Login({
+  run({
     b: 100
   })
+  cancel()
 }, 1000)
+run({
+    b: 100
+})
+run({
+    b: 100
+  })
 </script>
 
 <template>
   {{ loading }}
 </template>
+@/https/api

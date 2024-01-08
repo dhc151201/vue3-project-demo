@@ -1,5 +1,8 @@
 import { ref, isRef, watch } from "vue"
 import type { RequestConfig, RequestServer, RequestResult, Record } from "@/types"
+import axios from "axios"
+import { debounce } from "@/utils";
+const { CancelToken } = axios;
 
 /**
  * 请求hooks
@@ -16,6 +19,7 @@ export default function (server: RequestServer, config?: RequestConfig): Request
     const response = ref<undefined | Record>() // 接口响应体数据（包含接口响应数据）
 
     const State = ref<Record>({})
+    let AxiosSource: any = null
     const Request = () => {
         loading.value = true
         done.value = false
@@ -29,15 +33,18 @@ export default function (server: RequestServer, config?: RequestConfig): Request
         else defaultParams = config?.defaultParams || {}
         State.value = Object.assign({}, defaultParams, State.value)
 
-        return server(State.value).then((res: any) => {
+        AxiosSource = CancelToken.source();
+        return server(State.value, {
+            cancelToken: AxiosSource.token
+        }).then((res: any) => {
             success.value = true
             response.value = res
             data.value = res.data
-            return res
+            return Promise.resolve(res)
         }).catch((err: any) => {
             error.value = true
             response.value = err;
-            return err
+            return Promise.reject(err)
         }).finally(() => {
             done.value = true
             if (config?.loadingDelay) {
@@ -51,20 +58,22 @@ export default function (server: RequestServer, config?: RequestConfig): Request
     }
 
     // 发起请求（除默认参数，其他参数将重置传入）
-    const run = async (query?: Record) => {
+    const run = debounce((query?: Record) => {
         State.value = query || {}
         return Request()
-    }
+    }, config?.debounceInterval) as any;
 
     const cancel = () => {
-
+        if (AxiosSource?.cancel) {
+            AxiosSource?.cancel('user cancel request.')
+        }
     }
 
     // 刷新请求（保留run函数传入的参数，将刷新参数合并覆盖传入）
-    const refresh = async (query?: Record) => {
+    const refresh = debounce((query?: Record) => {
         State.value = Object.assign({}, State.value || {}, query || {})
         return Request()
-    }
+    }, config?.debounceInterval) as any;
 
     if (config?.manual !== true) {
         run()
