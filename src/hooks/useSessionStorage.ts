@@ -1,5 +1,5 @@
 /**
- * 设置
+ * 设置sessionStorage
  * @param key 
  * @param value 
  */
@@ -9,6 +9,12 @@ export const setSessionStorage = (key: string, value: any) => {
     }))
 }
 
+/**
+ * 读取sessionStorage
+ * @param key 
+ * @param callback 
+ * @returns 
+ */
 export const getSessionStorage = (key: string, callback?: (value: any) => void): any => {
     const VALUE = sessionStorage.getItem(key)
     if (!VALUE) return;
@@ -19,11 +25,19 @@ export const getSessionStorage = (key: string, callback?: (value: any) => void):
     } catch (e) { console.error(e) }
 }
 
+/**
+ * 移除指定的sessionStorage
+ * @param key 
+ * @returns 
+ */
 export const removeSessionStorage = (key: string) => {
     if (!key) return;
     sessionStorage.removeItem(key)
 }
 
+/**
+ * 清空sessionStorage
+ */
 export const clearSessionStorage = () => {
     sessionStorage.clear()
 }

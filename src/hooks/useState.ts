@@ -1,5 +1,5 @@
 import { awaitTime } from "@/utils";
-import { readonly, ref, type Ref } from "vue";
+import { ref, type Ref } from "vue";
 
 /**
  * 定义响应api
@@ -11,7 +11,7 @@ export default function <type>(defaultValue: type): [Ref<type>, (value: type, de
     const [target] = [ref<any>(defaultValue)];
 
     /**
-     * 
+     * 值设置
      * @param value 将要设置的新值
      * @param delay 设置新值的延迟时间，默认同步设置
      */

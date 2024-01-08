@@ -1,6 +1,12 @@
 import { ref, isRef, watch } from "vue"
 import type { RequestConfig, RequestServer, RequestResult, Record } from "@/types"
 
+/**
+ * 请求hooks
+ * @param server 请求的promise对象
+ * @param config 配置
+ * @returns 
+ */
 export default function (server: RequestServer, config?: RequestConfig): RequestResult {
     const loading = ref<boolean>(false)
     const done = ref<boolean>(false)
