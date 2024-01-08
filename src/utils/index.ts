@@ -41,7 +41,7 @@ export const isBoolern = function (val: any): boolean {
  * @returns boolean
  */
 export const isIncludesChinase = (str: string): boolean => {
-  var reg = new RegExp("[\\u4E00-\\u9fa5]+", "gi");
+  const reg = new RegExp("[\\u4E00-\\u9fa5]+", "gi");
   return reg.test(str)
 }
 /**
@@ -50,7 +50,7 @@ export const isIncludesChinase = (str: string): boolean => {
  * @returns boolean
  */
 export const isIncludesEnglish = (str: string): boolean => {
-  var reg = new RegExp("[A-Za-z]+", "g");
+  const reg = new RegExp("[A-Za-z]+", "g");
   return reg.test(str)
 }
 /**
@@ -86,7 +86,7 @@ export const isPicture = (file_name: string): boolean => {
 export const hasKey = (val: any, key: string): boolean => {
   return isObject(val) && Object.keys(val).includes(key)
 }
-export const runFunction = (fun: any, ...args) => {
+export const runFunction = (fun: any, ...args: any[]) => {
   if (!isFunction(fun)) return;
   return fun(...args);
 };
@@ -121,7 +121,7 @@ export const awaitTime = function (time: number) {
 export const debounce = function (fun: Function, wait?: number) {
   if (!wait) return fun;
   let timer: any;
-  return (...args) => {
+  return (...args: any[]) => {
     return new Promise((reslove) => {
       if (timer) clearTimeout(timer);
       timer = setTimeout(async () => {
@@ -141,7 +141,7 @@ export const debounce = function (fun: Function, wait?: number) {
 export const throttle = function (fun: Function, wait?: number) {
   if (!wait) return fun;
   let time1 = 0;
-  return (...args) => {
+  return (...args: any[]) => {
     const time2 = Date.now();
     const timeInterval = time2 - time1;
     if (timeInterval < wait) {
@@ -183,7 +183,7 @@ export const diffFiles = function (files: File[]): Promise<File[] | null> {
   const arr: any[] = []
   for (const file of files) {
     const task = new Promise((reslove, reject) => {
-      var reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsText(file, "UTF-8");
       reader.onload = () => reslove(file);
       reader.onerror = () => {
@@ -207,22 +207,23 @@ export const diffFiles = function (files: File[]): Promise<File[] | null> {
  */
 export const diffObj = function (obj1: any, obj2: any) {
   function getTypeByObj(obj: any): any {
-    return Object.prototype.toString.call(obj).match(/^\[object ([a-zA-Z]*)\]$/)[1];
+    const result = Object.prototype.toString.call(obj).match(/^\[object ([a-zA-Z]*)\]$/)
+    return result ? result[1] : null;
   }
   function isEmptyObject(obj: any) {
-    for (let key in obj) {
-      return false;
+    for (const key in obj) {
+      return !key;
     };
     return true;
   }
   if (!obj1 || isEmptyObject(obj1) || !obj2 || isEmptyObject(obj2)) {
     return null;
   }
-  let diffRes: any = {
+  const diffRes: any = {
     old_val: {},
     new_val: {}
   };
-  for (let k in obj2) {
+  for (const k in obj2) {
     // 判断数据类型是否一致
     if (getTypeByObj(obj2[k]) === getTypeByObj(obj1[k])) {
       // 比较 “Array”和“Object”类型
@@ -259,16 +260,16 @@ export const diffObj = function (obj1: any, obj2: any) {
  */
 export const fileToBase64 = (file: File) => {
   return new Promise((reslove) => {
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.readAsDataURL(file);
     //转化二进制流，异步方法
     reader.onload = function () {
       //完成后this.result为二进制流
-      var base64Str: any = this.result;
-      var startNum = base64Str.indexOf("base64,");
+      const base64Str: any = this.result;
+      let startNum = base64Str.indexOf("base64,");
       startNum = startNum * 1 + 7;
       //去除前部格式信息（如果有需求）
-      var baseStr = base64Str.slice(startNum);
+      const baseStr = base64Str.slice(startNum);
       // console.log(baseStr,"二进制数据！！！")
       reslove(baseStr)
     }
@@ -319,8 +320,8 @@ export const tryRemoveItemArray = (arr: any[], target: any) => {
  * @returns undefined | string
  */
 export const getUrlQueryParams = (name: string): string | undefined => {
-  var reg = new RegExp(name + "=[^&]*", "i");
-  var r = window.location.href.match(reg)
+  const reg = new RegExp(name + "=[^&]*", "i");
+  const r = window.location.href.match(reg)
   if (r) return r[0].replace(new RegExp(name + "=", "i"), '');
   return undefined;
 }
