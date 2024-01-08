@@ -13,12 +13,6 @@ setTimeout(() => {
   })
   cancel()
 }, 1000)
-run({
-    b: 100
-})
-run({
-    b: 100
-  })
 </script>
 
 <template>
