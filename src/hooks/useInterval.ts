@@ -1,5 +1,3 @@
-import type { number } from "echarts"
-
 /***
  * callback 定时任务回调函数，
  * time 任务执行的间隔时间，
