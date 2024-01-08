@@ -18,4 +18,3 @@ setTimeout(() => {
 <template>
   {{ loading }}
 </template>
-@/https/api
