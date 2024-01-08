@@ -10,13 +10,19 @@ const config: {[key: string]: [string, 'get'|'post']} = {
     Login: ['http://api2-test.minems.com:8080/api/admin/login', 'post']
 }
 
-const apis: {
-    [key: string]: (query?: Query, config?: Config) => Promise<any>
-} = {}
-Object.keys(config).forEach((apiName: string) => {
-    const [url, method] = config[apiName]
-    const Server = method === 'get' ? GET : POST;
-    apis[apiName] = (query?: Query, config?: Config) => Server(url, { data: query, ...(config || {}) })
-})
 
-export default apis
+
+// 获取api接口server map
+const getApis = () => {
+    const apis: {
+        [key: string]: (query?: Query, config?: Config) => Promise<any>
+    } = {}
+    Object.keys(config).forEach((apiName: string) => {
+        const [url, method] = config[apiName]
+        const Server = method === 'get' ? GET : POST;
+        apis[apiName] = (query?: Query, config?: Config) => Server(url, { data: query, ...(config || {}) })
+    })
+    return apis
+}
+
+export default getApis()
