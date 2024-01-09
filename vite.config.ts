@@ -39,7 +39,7 @@ export default defineConfig({
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
-        additionalData: `@import "${path.resolve(__dirname, 'src/styles/thame.less')}";`, // 全局less变量自动载入vue文件
+        additionalData: `;@import "${path.resolve(__dirname, 'src/styles/thame.less')}";`, // 全局less变量自动载入vue文件
       }
     }
   },
