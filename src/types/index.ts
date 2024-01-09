@@ -47,3 +47,11 @@ export type RequestResult = {
     // 刷新接口
     refresh: (query?: Record) => Promise<any>;
 }
+
+export type Flow = {
+    id: number | string,
+    loading: boolean,
+    info: Record,
+    steps: ({} & Record)[],
+    roles: ({} & Record)[],
+}
