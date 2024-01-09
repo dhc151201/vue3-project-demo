@@ -48,10 +48,48 @@ export type RequestResult = {
     refresh: (query?: Record) => Promise<any>;
 }
 
+
+export type FlowStepInfomation = {
+    complete: boolean,
+    review: boolean,
+    type: string,
+    cando: string[],
+    url: string,
+    value: string
+} & Record;
+
+export type FlowStep = {
+    sop_step_id: string, // 步骤id, 开始和结束步骤为-1
+    next_sop_step_id: string[], // 下一步骤的id集合
+    title: string, // 步骤名称
+    role: number, // 所属角色id
+    status: boolean, // 是否已完成
+    options: FlowStepInfomation[],
+} & Record;
+
+export type FlowRoles = {
+    role_id: number // 角色id
+    title: string, // 角色名称
+} & Record;
+
+export type FlowInfo = {
+    can_delete: boolean,
+    current_sop_step_id: string,
+    extra: Record,
+    farm_id: number,
+    logs: Record[],
+    is_commit_question: boolean,
+    is_next_show: 'pending' | 'hidden',
+    is_archiving: 'hidden'
+    template: {
+        easy_name: string
+    }
+} & Record;
+
 export type Flow = {
     id: number | string,
     loading: boolean,
-    info: Record,
-    steps: ({} & Record)[],
-    roles: ({} & Record)[],
+    info: FlowInfo,
+    steps: FlowStep[],
+    roles: FlowRoles[],
 }
