@@ -12,12 +12,14 @@
 
     // 资源404时自动强刷页面
     window.addEventListener('error', (event) => {
+        console.info("error", event, event.target)
+
         const tag: any = event.target;
         const cont: number = Number(sessionStorage.getItem(_autoReloadContKey) || 0);
         if (cont >= _reloadMaxCont) return;
 
         // 标记reload次数小于5次
-        if ((tag.tagName === 'SCRIPT' && !(event instanceof ErrorEvent)) || event?.message?.includes('Failed to load resource')) {
+        if (tag.tagName === 'LINK' || (tag.tagName === 'SCRIPT' && !(event instanceof ErrorEvent)) || event?.message?.includes('Failed to load resource')) {
             sessionStorage.setItem(_autoReloadContKey, String(cont + 1))
             location.reload()
         }
@@ -25,6 +27,8 @@
 
     // 动态模块导入错误重载
     window.addEventListener('unhandledrejection', (e) => {
+        console.info("error", e, e.reason)
+
         const message = e.reason.message;
         const cont: number = Number(sessionStorage.getItem(_autoReloadContKey) || 0);
         if (cont >= _reloadMaxCont) return;
