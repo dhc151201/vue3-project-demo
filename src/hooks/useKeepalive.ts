@@ -9,7 +9,7 @@ export function addKeepAliveCache(name: string) {
 }
 
 export function removeKeepAliveCache(name: string) {
-    const index: number | undefined | null = includes.value.findIndex(item => item === name)
+    const index: any = includes.value.findIndex(item => item === name)
     if([null, undefined].includes(index)) return
     includes.value.splice(index, 1);
 }
