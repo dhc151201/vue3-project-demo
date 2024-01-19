@@ -5,94 +5,102 @@ import { isEmailStr, isFunction } from "@/utils"
 import {isRef, ref, watch} from "vue"
 import type { Ref } from "vue"
 
+/**
+ * 默认值处理
+ * @param item useFormModel表单配置项
+ * @param FormModel 表单数据
+ */
+const handelDefaultValue = (item: FormItem, FormModel: Ref<{[key: string]: any}>) => {
+    // 默认值
+    if (isFunction(item.defaultValue)) {
+        FormModel.value[item.field] = (item.defaultValue as Function)()
+    } else if (isRef(item.defaultValue)) {
+        watch(item.defaultValue, () => {
+            FormModel.value[item.field] = (item.defaultValue as Ref).value
+        }, {
+            immediate: true
+        })
+    } else {
+        FormModel.value[item.field] = ''
+    }
+
+    // used 切换时
+    if (item.used !== undefined) {
+        watch(() => {
+            if (isRef(item.used)) return item.used.value
+            if (isFunction(item.used)) return (item.used as Function)(FormModel.value)
+            return true
+        }, () => {
+            if (isFunction(item.defaultValue)) {
+                FormModel.value[item.field] = (item.defaultValue as Function)()
+            } else if (isRef(item.defaultValue)) {
+                FormModel.value[item.field] = (item.defaultValue as Ref).value
+            } else {
+                FormModel.value[item.field] = ''
+            }
+        })
+    }
+}
+
+/**
+ * 验证规则
+ * @param item useFormModel表单配置项
+ */
+const handelValidator = (item: FormItem) => {
+    if (!item.options) {
+        item.options = {}
+    }
+    item.options.rules = {
+        required: item.required,
+        validator: (rule: any, value: any, callback: any) => {
+            if (item.required && ['', undefined, null].includes(value)) {
+                return Promise.reject('请输入' + item.label)
+            }
+            if (value) {
+                if (item.isEmail && !isEmailStr(value)) {
+                    return Promise.reject('邮箱格式不正确')
+                }
+                if (item.isInt && value !== Math.ceil(value)) {
+                    return Promise.reject('只能输入整数')
+                }
+                if (item.isNoChinese && /.*[\u4e00-\u9fa5]+.*$/.test(value)) {
+                    return Promise.reject('不能输入中文')
+                }
+                if (item.isNoSpecial && /[(\\)(\\~)(\\~)(\\!)(\\！)(\\@)(\\#)(\\$)(\\￥)(\\%)(\\^)(\\……)(\\&)(\\*)(\\()(\\（)(\\))(\\）)(\\-)(\_))(\——)(\+)(\=)(\[)(\【)(\])(\】)(\{)(\})(\|))(\、))(\)(\\)(\;)(\；)(\:)(\：)(\')(\‘)(\’)(\")(\“)(\”)(\,)(\，)(\.)(\。)(\/)(\《)(\<)(\>)(\》)(\?)(\？)(\)]+/.test(value)) {
+                    return Promise.reject('不能输入特殊字符')
+                }
+                if (item.minValue !== undefined && value < item.minValue) {
+                    return Promise.reject('最小值不能小于' + item.minValue)
+                }
+                if (item.maxValue !== undefined && value > item.maxValue) {
+                    return Promise.reject('最大值不能大于' + item.maxValue)
+                }
+            }
+            return Promise.resolve()
+        }
+    }
+}
+
+/**
+ * 组件传递的props转换
+ * @param item useFormModel表单配置项
+ */
+const handeFormItemProps = (item: FormItem) => {
+    item.options = Object.assign(item.options || {}, {
+        label: item.label,
+        required: item.required,
+    })
+}
+
 export const useFormModel = (FormOptions: FormOptions, FormItems: FormItem[]) => {
 
     const FormModel = ref<{ [key: string]: any }>({})
 
-    /***
-     * 默认值处理
-     */
     FormItems.forEach((item: FormItem) => {
-        // 默认值
-        if (isFunction(item.defaultValue)) {
-            FormModel.value[item.field] = (item.defaultValue as Function)()
-        } else if (isRef(item.defaultValue)) {
-            watch(item.defaultValue, () => {
-                FormModel.value[item.field] = (item.defaultValue as Ref).value
-            }, {
-                immediate: true
-            })
-        } else {
-            FormModel.value[item.field] = ''
-        }
-
-        // used 切换时
-        if (item.used !== undefined) {
-            watch(() => {
-                if (isRef(item.used)) return item.used.value
-                if (isFunction(item.used)) return (item.used as Function)(FormModel.value)
-                return true
-            }, () => {
-                if (isFunction(item.defaultValue)) {
-                    FormModel.value[item.field] = (item.defaultValue as Function)()
-                } else if (isRef(item.defaultValue)) {
-                    FormModel.value[item.field] = (item.defaultValue as Ref).value
-                } else {
-                    FormModel.value[item.field] = ''
-                }
-            })
-        }
+        handelDefaultValue(item, FormModel)
+        handelValidator(item)
+        handeFormItemProps(item)
     })
-
-    /***
-     * 验证规则
-     */
-    FormItems.forEach((item: FormItem) => {
-        if (!item.options) {
-            item.options = {}
-        }
-        item.options.rules = {
-            required: item.required,
-            validator: (rule: any, value: any, callback: any) => {
-                if (item.required && ['', undefined, null].includes(value)) {
-                    return Promise.reject('请输入' + item.label)
-                }
-                if (value) {
-                    if (item.isEmail && !isEmailStr(value)) {
-                        return Promise.reject('邮箱格式不正确')
-                    }
-                    if (item.isInt && value !== Math.ceil(value)) {
-                        return Promise.reject('只能输入整数')
-                    }
-                    if (item.isNoChinese && /.*[\u4e00-\u9fa5]+.*$/.test(value)) {
-                        return Promise.reject('不能输入中文')
-                    }
-                    if (item.isNoSpecial && /[(\\)(\\~)(\\~)(\\!)(\\！)(\\@)(\\#)(\\$)(\\￥)(\\%)(\\^)(\\……)(\\&)(\\*)(\\()(\\（)(\\))(\\）)(\\-)(\_))(\——)(\+)(\=)(\[)(\【)(\])(\】)(\{)(\})(\|))(\、))(\)(\\)(\;)(\；)(\:)(\：)(\')(\‘)(\’)(\")(\“)(\”)(\,)(\，)(\.)(\。)(\/)(\《)(\<)(\>)(\》)(\?)(\？)(\)]+/.test(value)) {
-                        return Promise.reject('不能输入特殊字符')
-                    }
-                    if (item.minValue !== undefined && value < item.minValue) {
-                        return Promise.reject('最小值不能小于' + item.minValue)
-                    }
-                    if (item.maxValue !== undefined && value > item.maxValue) {
-                        return Promise.reject('最大值不能大于' + item.maxValue)
-                    }
-                }
-                return Promise.resolve()
-            }
-        }
-    })
-
-    /**
-     * 组件传递的props转换
-     */
-    FormItems.forEach((item: FormItem) => { 
-        item.options = Object.assign(item.options || {}, {
-            label: item.label,
-            required: item.required,
-        })
-    })
-
-
 
     /***
      * 表单切换
