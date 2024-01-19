@@ -92,7 +92,8 @@ const handeFormItemProps = (item: FormItem) => {
     })
 }
 
-export const useFormModel = (FormOptions: FormOptions, FormItems: FormItem[]) => {
+// 表单
+export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
 
     const FormModel = ref<{ [key: string]: any }>({})
 
@@ -102,9 +103,6 @@ export const useFormModel = (FormOptions: FormOptions, FormItems: FormItem[]) =>
         handeFormItemProps(item)
     })
 
-    /***
-     * 表单切换
-     */
     const showForm = ref<boolean>(false)
     const tiggleForm = (visable: boolean) => showForm.value = visable
 
@@ -115,10 +113,18 @@ export const useFormModel = (FormOptions: FormOptions, FormItems: FormItem[]) =>
     }
 }
 
+// 弹窗表单
+export const useFormModel = (FormOptions: FormOptions & {
+    width: number,
+}, FormItems: FormItem[]) => { 
+    return useForm(FormOptions, FormItems)
+}
+
 type FormOptions = {
     title?: string | Ref<string> | (() => string),
     loading?: Ref<boolean>,
     layout?: 'vertical' | 'inline' | 'horizontal',
+    hiddenRequireIcon?: boolean,
     // 表单挂载前
     onBeforeMount?: (() => Boolean) | (() => Promise<Boolean>),
     // 表单提交
