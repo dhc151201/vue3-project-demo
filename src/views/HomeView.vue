@@ -14,6 +14,7 @@ const config = {
       field: 'name',
       required: true,
       isInt: true,
+      defaultValue: 222,
       options: {
         extra: "额外然后问巴博萨发送卡"
       }

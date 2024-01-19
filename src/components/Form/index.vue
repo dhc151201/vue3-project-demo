@@ -56,7 +56,8 @@ const handelSubmit = async () => {
     }
 }
 defineExpose({
-    submit: handelSubmit
+    submit: handelSubmit,
+    model: model.value
 })
 </script>
 <style lang="less" scoped>

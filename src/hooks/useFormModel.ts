@@ -13,10 +13,10 @@ import type { Ref } from "vue"
 const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<{ [key: string]: any }>) => {
 
     const setDefaultValue = () => {
-        const model = FormOptions.model || {}
+        const model: any = FormOptions.model || {}
         if (isRef(model) && (model as Ref).value[item.field]) {
             FormModel.value[item.field] = FormOptions.model?.value[item.field]
-        } else if (model) { 
+        } else if (model[item.field]) {
             FormModel.value[item.field] = (model as { [key: string]: any })[item.field]
         } else if (isFunction(item.defaultValue)) {
             FormModel.value[item.field] = (item.defaultValue as Function)()
