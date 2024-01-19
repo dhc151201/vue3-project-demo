@@ -21,6 +21,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "@vueuse/core": "^10.7.1",
     "ant-design-vue": "4.x",
     "axios": "^1.6.4",

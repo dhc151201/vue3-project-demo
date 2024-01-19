@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import Form from "@/components/Form/index.vue"
+import { awaitTime } from "@/utils";
 
 const config = {
+  onBeforeMount: async () => {
+    await awaitTime(5999)
+  },
   onSubmit: (values: any) => {
     debugger
   },
