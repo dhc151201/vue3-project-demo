@@ -33,8 +33,7 @@ const config = {
 
 <template>
   <Form ref="refForm" :config="config">
-    <template #default="{submit, model}">
-      {{ model }}
+    <template #default="{submit}">
       <a-button type="primary" @click.prevent="submit">Create</a-button>
     </template>
   </Form>
