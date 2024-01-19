@@ -23,8 +23,8 @@
                 </a-select>
             </a-form-item>
         </template>
+        <slot :submit="handelSubmit" :model="model"></slot>
     </a-form>
-    <slot :submit="handelSubmit" :model="model"></slot>
 </template>
 <script setup lang="ts">
 import { useForm } from "@/hooks/useFormModel"
