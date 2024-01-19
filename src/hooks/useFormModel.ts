@@ -14,7 +14,7 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
 
     const setDefaultValue = () => {
         const model: any = FormOptions.model || {}
-        
+
         if (isRef(model) && (model as Ref).value[item.field]) {
             FormModel.value[item.field] = FormOptions.model?.value[item.field]
         }
@@ -88,6 +88,7 @@ const handelValidator = (item: FormItem) => {
 /**
  * 组件传递的props转换
  * @param item useFormModel表单配置项
+ * @param FormOptions FormOptions配置
  */
 const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
     item.options = Object.assign(item.options || {}, {
@@ -95,6 +96,17 @@ const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
         name: item.field,
         required: FormOptions.hiddenRequireIcon || item.required,
     })
+}
+
+/**
+ * 输入组件传递的props转换
+ * @param item useFormModel表单配置项
+ * @param FormOptions FormOptions配置
+ */
+const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
+    item.inputOptions = {
+        placeholder: "请输入"
+    }
 }
 
 // 表单
@@ -109,6 +121,7 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
         handelDefaultValue(item, FormOptions, FormState)
         handeFormItemProps(item, FormOptions)
         handelValidator(item)
+        handelFormInputProps(item, FormOptions)
     })
 
     const showForm = ref<boolean>(false)
@@ -141,7 +154,7 @@ type FormOptions = {
     onBeforeMount?: (() => Boolean) | (() => Promise<Boolean>),
     // 表单提交
     onSubmit?: (() => Boolean) | (() => Promise<Boolean>),
-    // 将会直接绑定传递给表单组件
+    // 将会直接绑定传递给【表单组件】
     options?: { 
         [key: string]: any
     }
@@ -161,8 +174,12 @@ type FormItem = {
     isNoSpecial?: boolean, // 是否不含特殊字符
     minValue?: number, // 最小值
     maxValue?: number, // 最大值
-    // 将会直接绑定传递给表单组件
+    // 将会直接绑定传递给【表单项组件】
     options?: { 
+        [key: string]: any
+    },
+    // 将会直接绑定传递给表单【输入组件】
+    inputOptions?: { 
         [key: string]: any
     }
 }
