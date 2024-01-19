@@ -14,15 +14,20 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
 
     const setDefaultValue = () => {
         const model: any = FormOptions.model || {}
+        
         if (isRef(model) && (model as Ref).value[item.field]) {
             FormModel.value[item.field] = FormOptions.model?.value[item.field]
-        } else if (model[item.field]) {
+        }
+        else if (model[item.field]) {
             FormModel.value[item.field] = (model as { [key: string]: any })[item.field]
-        } else if (isFunction(item.defaultValue)) {
+        }
+        else if (isFunction(item.defaultValue)) {
             FormModel.value[item.field] = (item.defaultValue as Function)()
-        } else if (isRef(item.defaultValue)) {
+        }
+        else if (isRef(item.defaultValue)) {
             FormModel.value[item.field] = (item.defaultValue as Ref).value
-        } else {
+        }
+        else {
             FormModel.value[item.field] = item.defaultValue || ''
         }
     }
