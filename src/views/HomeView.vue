@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import {ref} from "vue"
 import Form from "@/components/Form/index.vue"
-import { useForm } from "@/hooks/useFormModel"
 
 const config = {
   onSubmit: (values: any) => {
