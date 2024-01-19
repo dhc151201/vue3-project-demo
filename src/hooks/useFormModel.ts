@@ -85,10 +85,10 @@ const handelValidator = (item: FormItem) => {
  * 组件传递的props转换
  * @param item useFormModel表单配置项
  */
-const handeFormItemProps = (item: FormItem) => {
+const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
     item.options = Object.assign(item.options || {}, {
         label: item.label,
-        required: item.required,
+        required: FormOptions.hiddenRequireIcon || item.required,
     })
 }
 
@@ -100,7 +100,7 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
     FormItems.forEach((item: FormItem) => {
         handelDefaultValue(item, FormModel)
         handelValidator(item)
-        handeFormItemProps(item)
+        handeFormItemProps(item, FormOptions)
     })
 
     const showForm = ref<boolean>(false)
@@ -124,6 +124,7 @@ type FormOptions = {
     title?: string | Ref<string> | (() => string),
     loading?: Ref<boolean>,
     layout?: 'vertical' | 'inline' | 'horizontal',
+    // 是否隐藏必填图标
     hiddenRequireIcon?: boolean,
     // 表单挂载前
     onBeforeMount?: (() => Boolean) | (() => Promise<Boolean>),
