@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import Form from "@/components/Form/index.vue"
+import ModelFormBtn from "@/components/ModelFormBtn/index.vue"
 import { awaitTime } from "@/utils";
 
 const config = {
+  title: "DEMO",
   onBeforeMount: async () => {
     await awaitTime(1000)
   },
@@ -60,10 +61,5 @@ const config = {
 </script>
 
 <template>
-  <Form ref="refForm" :config="config">
-    <template #default="{submit}">
-      <a-button type="primary" @click.prevent="submit">Create</a-button>
-    </template>
-  </Form>
-  
+  <ModelFormBtn :config="config">Open Modal</ModelFormBtn>
 </template>

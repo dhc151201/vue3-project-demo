@@ -24,6 +24,8 @@ declare module 'vue' {
     AUpload: typeof import('ant-design-vue/es')['Upload']
     Form: typeof import('./src/components/Form/index.vue')['default']
     Loading: typeof import('./src/components/Loading/index.vue')['default']
+    ModelForm: typeof import('./src/components/ModelForm/index.vue')['default']
+    ModelFormBtn: typeof import('./src/components/ModelFormBtn/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

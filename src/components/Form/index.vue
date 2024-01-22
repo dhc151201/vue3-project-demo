@@ -6,53 +6,58 @@
             <template v-for="item of items">
                 <!-- {{ item.isRander  }} -->
                 <a-form-item v-bind="item.options">
-                    <a-input v-if="!item.type || item.type == 'text'" v-model:value="model[item.field]" v-bind="item.inputOptions" />
-                    <a-input-number v-else-if="item.type == 'number'" v-model:value="model[item.field]" v-bind="item.inputOptions">
-                        <template v-if="item.options?.suffix" #addonAfter>{{ item.options?.suffix }}</template>
-                    </a-input-number>
-                    <a-input-password v-else-if="item.type == 'password'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
-                    <a-textarea v-else-if="item.type == 'textarea'" v-model:value="model[item.field]" v-bind="item.inputOptions" />
-                    <a-date-picker v-else-if="item.type == 'date'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
-                    <a-range-picker v-else-if="item.type == 'date-range'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
-                    <a-checkbox-group v-else-if="item.type == 'checkbox'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
-                    <a-radio-group v-else-if="item.type == 'radio'" v-model:value="model[item.field]"  v-bind="item.inputOptions"/>
-                    <a-select v-else-if="item.type == 'select'" v-model:value="model[item.field]"  v-bind="item.inputOptions"/>
-                    <!-- 图片上传 -->
-                    <template v-else-if="item.type == 'picture'">
-                        <a-upload
-                            v-model:file-list="model[item.field]"
-                            list-type="picture-card"
-                            @preview="handlePreview"
-                            v-bind="item.inputOptions"
-                        >
-                            <div v-if="!item.maxLength || model[item.field].length < item.maxLength">
-                                <plus-outlined />
-                                <div style="margin-top: 8px">选择文件</div>
-                            </div>
-                        </a-upload>
-                        <span v-if="item.maxLength">最多上传{{item.maxLength}}个图片</span>
+                    <template v-if="item.slot">
+                        <slot :name="item.slot" :model="model" :option="item"></slot>
                     </template>
-                    <!-- 文件上传 -->
-                    <template v-else-if="item.type == 'file'">
-                        <a-upload
-                            v-model:file-list="model[item.field]"
-                            list-type="picture"
-                            @preview="handlePreview"
-                            :class="'file'"
-                            v-bind="item.inputOptions"
-                        >
-                            <div v-if="!item.maxLength || model[item.field].length < item.maxLength">
-                                <a-button>
-                                    <upload-outlined></upload-outlined>
-                                    选择文件
-                                </a-button>
-                                <span v-if="item.maxLength">最多上传{{item.maxLength}}个文件</span>    
-                            </div>
-                        </a-upload>
+                    <template v-else>
+                        <a-input v-if="!item.type || item.type == 'text'" v-model:value="model[item.field]" v-bind="item.inputOptions" />
+                        <a-input-number v-else-if="item.type == 'number'" v-model:value="model[item.field]" v-bind="item.inputOptions">
+                            <template v-if="item.options?.suffix" #addonAfter>{{ item.options?.suffix }}</template>
+                        </a-input-number>
+                        <a-input-password v-else-if="item.type == 'password'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
+                        <a-textarea v-else-if="item.type == 'textarea'" v-model:value="model[item.field]" v-bind="item.inputOptions" />
+                        <a-date-picker v-else-if="item.type == 'date'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
+                        <a-range-picker v-else-if="item.type == 'date-range'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
+                        <a-checkbox-group v-else-if="item.type == 'checkbox'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
+                        <a-radio-group v-else-if="item.type == 'radio'" v-model:value="model[item.field]"  v-bind="item.inputOptions"/>
+                        <a-select v-else-if="item.type == 'select'" v-model:value="model[item.field]"  v-bind="item.inputOptions"/>
+                        <!-- 图片上传 -->
+                        <template v-else-if="item.type == 'picture'">
+                            <a-upload
+                                v-model:file-list="model[item.field]"
+                                list-type="picture-card"
+                                @preview="handlePreview"
+                                v-bind="item.inputOptions"
+                            >
+                                <div v-if="!item.maxLength || model[item.field].length < item.maxLength">
+                                    <plus-outlined />
+                                    <div style="margin-top: 8px">选择文件</div>
+                                </div>
+                            </a-upload>
+                            <span v-if="item.maxLength">最多上传{{item.maxLength}}个图片</span>
+                        </template>
+                        <!-- 文件上传 -->
+                        <template v-else-if="item.type == 'file'">
+                            <a-upload
+                                v-model:file-list="model[item.field]"
+                                list-type="picture"
+                                @preview="handlePreview"
+                                :class="'file'"
+                                v-bind="item.inputOptions"
+                            >
+                                <div v-if="!item.maxLength || model[item.field].length < item.maxLength">
+                                    <a-button>
+                                        <upload-outlined></upload-outlined>
+                                        选择文件
+                                    </a-button>
+                                    <span v-if="item.maxLength">最多上传{{item.maxLength}}个文件</span>    
+                                </div>
+                            </a-upload>
+                        </template>
                     </template>
                 </a-form-item>
             </template>
-            <slot :submit="handelSubmit" :model="model"></slot>
+            <slot :submit="handelSubmit" :model="model" :loading="loading"></slot>
         </a-form>
     </Laoding>
 
