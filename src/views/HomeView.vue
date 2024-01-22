@@ -4,10 +4,10 @@ import { awaitTime } from "@/utils";
 
 const config = {
   onBeforeMount: async () => {
-    await awaitTime(5999)
+    await awaitTime(1000)
   },
   onSubmit: (values: any) => {
-    debugger
+    console.log(values)
   },
   items: [
     {
@@ -27,6 +27,33 @@ const config = {
       options: {
         extra: "额外然后问巴博萨发送卡"
       }
+    },
+    {
+      label: "图片",
+      field: 'files',
+      type: 'picture',
+      maxLength: 2,
+      defaultValue: [
+        {
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        }
+      ]
+    },
+    {
+      label: "文件",
+      field: 'upFiles',
+      type: 'file',
+      defaultValue: [
+        {
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        }
+      ]
     }
   ]
 }

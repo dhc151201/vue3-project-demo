@@ -2,7 +2,7 @@
  * 表单模型
  */
 import { isEmailStr, isFunction } from "@/utils"
-import {isRef, ref, watch} from "vue"
+import {isRef, ref, watch, computed} from "vue"
 import type { Ref } from "vue"
 
 /**
@@ -26,6 +26,9 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
         }
         else if (isRef(item.defaultValue)) {
             FormModel.value[item.field] = (item.defaultValue as Ref).value
+        }
+        else if(item.type === 'picture' || item.type === 'file') {
+            FormModel.value[item.field] = item.defaultValue || []
         }
         else {
             FormModel.value[item.field] = item.defaultValue || ''
@@ -107,6 +110,17 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
     item.inputOptions = {
         placeholder: "请输入"
     }
+
+    if (item.type === 'picture' || item.type === 'file') {
+        Object.assign(item.inputOptions, {
+            action: '',
+            name: item.field,
+            accept: item.type === 'picture' ? 'image/*' : '',
+            beforeUpload: (file, fileList) => {
+                return false
+            }
+        }, item.inputOptions)
+    }
 }
 
 // 表单
@@ -130,7 +144,12 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
     return {
         showForm,
         FormProps,
-        FormItems,
+        FormItems: computed(() => FormItems.filter((item: FormItem) => {
+            if (isRef(item.used)) return (item.used as Ref).value;
+            if (isFunction(item.used)) return (item.used as Function)(FormState.value)
+            if (typeof item.used === 'boolean') return item.used
+            return true;
+        })),
         FormState,
         tiggleForm
     }
@@ -164,16 +183,17 @@ type FormItem = {
     label: string | Ref<string> | (() => string),
     field: string,
     required?: boolean,
-    type?: 'text' | 'number' | 'radio' | 'select' | 'date' | 'date-range' | 'textarea' | 'checkbox' | 'password', // 表单类型
+    type?: 'text' | 'number' | 'radio' | 'select' | 'date' | 'date-range' | 'textarea' | 'checkbox' | 'password' | 'picture' | 'file', // 表单类型
     dic?: {label: string | Ref<string>, value: string|number|Ref<number>|Ref<string>}[],
     defaultValue?: string | Ref<string> | (() => string), // 默认值
-    used?: Ref<boolean> | ((model: { [key: string]: any }) => boolean), // 是否使用
+    used?: boolean | Ref<boolean> | ((model: { [key: string]: any }) => boolean), // 是否使用
     isEmail?: boolean, // 是否是邮箱
     isInt?: boolean, // 是否是正整数
     isNoChinese?: boolean, // 是否不含中文字符
     isNoSpecial?: boolean, // 是否不含特殊字符
     minValue?: number, // 最小值
     maxValue?: number, // 最大值
+    maxLength?: number, // 最大长度，type为picture、file时，限制的是媒体个数
     // 将会直接绑定传递给【表单项组件】
     options?: { 
         [key: string]: any
