@@ -89,7 +89,7 @@ const handelValidator = (item: FormItem) => {
 }
 
 /**
- * 组件传递的props转换
+ * 表单项组件传递，的props转换
  * @param item useFormModel表单配置项
  * @param FormOptions FormOptions配置
  */
@@ -102,7 +102,7 @@ const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
 }
 
 /**
- * 输入组件传递的props转换
+ * 输入组件，传递的props转换
  * @param item useFormModel表单配置项
  * @param FormOptions FormOptions配置
  */
