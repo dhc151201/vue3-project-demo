@@ -10,14 +10,14 @@
                         <slot :name="item.slot" :model="model" :option="item"></slot>
                     </template>
                     <template v-else>
-                        <a-input v-if="!item.type || item.type == 'text'" v-model:value="model[item.field]" v-bind="item.inputOptions" />
-                        <a-input-number v-else-if="item.type == 'number'" v-model:value="model[item.field]" v-bind="item.inputOptions">
+                        <a-input v-if="!item.type || item.type == 'text'" v-model:value="model[item.field]" v-bind="item.inputOptions" v-trim />
+                        <a-input-number v-else-if="item.type == 'number'" v-model:value="model[item.field]" v-bind="item.inputOptions" v-trim>
                             <template v-if="item.options?.suffix" #addonAfter>{{ item.options?.suffix }}</template>
                         </a-input-number>
                         <a-input-password v-else-if="item.type == 'password'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
-                        <a-textarea v-else-if="item.type == 'textarea'" v-model:value="model[item.field]" v-bind="item.inputOptions" />
-                        <a-date-picker v-else-if="item.type == 'date'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
-                        <a-range-picker v-else-if="item.type == 'date-range'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
+                        <a-textarea v-else-if="item.type == 'textarea'" v-model:value="model[item.field]" v-bind="item.inputOptions"  v-trim/>
+                        <a-date-picker v-else-if="item.type == 'date'" v-model:value="model[item.field]" v-bind="item.inputOptions" v-trim/>
+                        <a-range-picker v-else-if="item.type == 'date-range'" v-model:value="model[item.field]" v-bind="item.inputOptions" v-trim/>
                         <a-checkbox-group v-else-if="item.type == 'checkbox'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
                         <a-radio-group v-else-if="item.type == 'radio'" v-model:value="model[item.field]"  v-bind="item.inputOptions"/>
                         <a-select v-else-if="item.type == 'select'" v-model:value="model[item.field]"  v-bind="item.inputOptions"/>
