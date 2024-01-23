@@ -1,0 +1,87 @@
+/**全局样式文件*/
+@import url('./thame.less');
+
+//分页条
+.ant-pagination {
+    .ant-pagination-item-link {
+        color: @text-light-color !important;
+        &[disabled] {
+            opacity: 0.3;
+        }
+    }
+
+    .ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis,
+    .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis,
+    .ant-pagination-jump-prev .ant-pagination-item-container .anticon,
+    .ant-pagination-jump-next .ant-pagination-item-container .anticon,
+    .ant-pagination-item a {
+        color: @text-light-color;
+    }
+
+    .ant-pagination-item-active {
+        background-color: @text-light-color;
+
+        &,
+        &:hover {
+            border-color: @color-primary;
+        }
+
+        &:hover a,
+        a {
+            color: @text-blank-color;
+        }
+    }
+
+}
+
+// 通知栏
+.ant-notification-notice {
+    background-color: @bg-blank-lighter;
+    color: @text-light-color;
+    padding: 0 1rem 0.5rem;
+    display: flex;
+    border-radius: 2rem;
+    width: auto;
+    padding-right: 2.5rem;
+
+    .ant-notification-notice-close {
+        top: 0.5rem;
+        inset-inline-end: 8px;
+    }
+
+    .ant-notification-close-x {
+        color: @text-label-color;
+    }
+}
+
+// 进度条
+.ant-progress {
+    margin-bottom: 0;
+
+    .ant-progress-inner {
+        background-color: rgba(255, 255, 255, .6);
+    }
+
+    .ant-progress-bg {
+        background-color: #5c7ee5;
+        background-size: 1rem 1rem;
+        background-image: linear-gradient(45deg,
+                rgba(255, 255, 255, 0.15) 25%,
+                transparent 25%, transparent 50%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.15) 75%,
+                transparent 75%,
+                transparent);
+    }
+
+    &.ant-progress-status-success {
+        .ant-progress-bg {
+            background-color: #0aac61;
+        }
+    }
+}
+
+// 弹窗
+.ant-modal-mask {
+    backdrop-filter: blur(4px);
+}

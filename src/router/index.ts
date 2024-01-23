@@ -12,6 +12,14 @@ const router = createRouter({
         keepAlive: openKeepAlive
       }
     },
+    {
+      path: '/login',
+      component: () => import('@/views/login/index.vue'),
+    },
+    {
+      path: '/home',
+      component: () => import('@/views/home.vue'),
+    },
   ]
 })
 

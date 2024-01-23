@@ -1,4 +1,5 @@
 import "@/styles/global.less"
+import "@/styles/ant.meta.less"
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
