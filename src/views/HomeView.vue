@@ -61,5 +61,8 @@ const config = {
 
 <template>
   <ModelFormBtn :config="config">Open Modal</ModelFormBtn>
-  <DcTable></DcTable>
+  <a-card title="卡片" size="small" :bordered="false">
+    <template #extra><a href="#">more</a></template>
+    <DcTable></DcTable>
+  </a-card>
 </template>

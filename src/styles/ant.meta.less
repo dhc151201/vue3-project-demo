@@ -1,6 +1,26 @@
 /**全局样式文件*/
 @import url('./thame.less');
 
+.ant-card{
+    margin-top: 1rem;
+    background-color: @bg-blank-light;
+    .ant-card-head{
+        border-bottom-color: transparent;
+        .ant-card-head-title{
+            color: @text-light-color;
+        }
+    }
+    &.ant-card-small{
+        .ant-card-head-wrapper{
+            padding-top: 1rem;
+            padding-bottom: 0.3rem;
+        }
+        .ant-card-head-title{
+            font-size: 1.3rem;
+        }
+    }
+}
+
 // 加载
 .ant-spin {
     .ant-spin-dot-item{

@@ -5,6 +5,7 @@ import { includes } from "@/hooks/useKeepalive"
 import Layout from "./components/Layout/index.vue"
 import Header from "./views/components/Header.vue"
 import Menu from "./views/components/Menu.vue"
+import menus from "@/enums/menus"
 
 const route = useRoute()
 const fullRouterView = computed(() => {
@@ -18,7 +19,7 @@ const fullRouterView = computed(() => {
       <Header></Header>
     </template>
     <template #menu>
-      <Menu></Menu>
+      <Menu :menus="menus"></Menu>
     </template>
     <template #page-content>
       <router-view v-slot="{ Component }">

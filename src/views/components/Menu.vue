@@ -9,19 +9,31 @@
             </div>
         </div>
         <a-layout-sider v-model:collapsed="collapsed" collapsible :collapsedWidth="0">
-            <a-menu v-model:selectedKeys="selectedKeys" :open-keys="openKeys" :items="[]"
-                    mode="inline" theme="dark"></a-menu>
+            <a-menu v-model:selectedKeys="selectedKeys" :open-keys="openKeys" :items="menus" mode="inline" theme="dark"></a-menu>
         </a-layout-sider>
     </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue';
+import { useRoute } from "vue-router"
+import {getPath} from "@/hooks/useMenus"
+const route = useRoute()
+const props = defineProps({
+    menus: {
+        type: Array,
+        default: () => []
+    }
+})
+
 const collapsed = ref(false)
 const openKeys = ref<(string | undefined)[]>([])
 const selectedKeys = ref<(string | undefined)[]>([])
 const toggleCollapsed = () => {
     collapsed.value = !collapsed.value;
+    const { path, parent } = getPath(route.path, props.menus)
+    selectedKeys.value = [path]
+    openKeys.value = [parent]
 };
 
 </script>
