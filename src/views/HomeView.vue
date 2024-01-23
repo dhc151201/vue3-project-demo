@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ModelFormBtn from "@/components/ModelFormBtn/index.vue"
 import { awaitTime } from "@/utils";
 
 const config = {
