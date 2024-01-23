@@ -24,7 +24,7 @@ const columns: TableColumns = [
     { title: "购买所需积分", dataIndex: 'ss', },
     { title: "创建时间", dataIndex: 'time', },
     { title: "修改时间", dataIndex: 'up_time', },
-    { title: "操作", slot: 'oper', width: 300, align: 'center' },
+    { title: "操作", slot: 'oper', width: 260, align: 'center' },
 ]
 
 const addEditconfig = computed((): ModelFormOptions => {

@@ -8,9 +8,32 @@
     }
     &.ant-btn-primary{
         &[disabled]{
-            color: @color-primary;
+            color: @text-light-color;
             border-color: @color-primary;
             opacity: 0.8;
+        }
+        &:not(.ant-btn-background-ghost){
+            background-color: @color-primary;
+            &.ant-btn-dangerous{
+                background-color: @color-dangerous;
+            }
+        }
+        &.ant-btn-background-ghost{
+            border-color: @color-primary;
+            color: @color-primary;
+            &:not([disabled]):hover{
+                background-color: @color-primary;
+                border-color: @color-primary;
+                color: @text-light-color
+            }
+            &.ant-btn-dangerous{
+                border-color: @color-dangerous;
+                color: @color-dangerous;
+                &:not([disabled]):hover{
+                    background-color: @color-dangerous;
+                    color: @text-light-color
+                }
+            }
         }
     }
 }
