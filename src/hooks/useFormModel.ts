@@ -4,13 +4,14 @@
 import { isEmailStr, isFunction } from "@/utils"
 import {isRef, ref, watch, computed} from "vue"
 import type { Ref } from "vue"
+import type { ModelFormOptions,FormItem, FormOptions, Record } from "@/types"
 
 /**
  * 默认值处理
  * @param item useFormModel表单配置项
  * @param FormModel 表单数据
  */
-const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<{ [key: string]: any }>) => {
+const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<Record>) => {
 
     const setDefaultValue = () => {
         const model: any = FormOptions.model || {}
@@ -131,7 +132,7 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
 
     FormProps.value = FormOptions.options
 
-    FormItems.forEach((item: FormItem) => {
+    FormItems?.forEach((item: FormItem) => {
         handelDefaultValue(item, FormOptions, FormState)
         handeFormItemProps(item, FormOptions)
         handelValidator(item)
@@ -144,63 +145,18 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
     return {
         showForm,
         FormProps,
-        FormItems: computed(() => FormItems.filter((item: FormItem) => {
+        FormItems: computed(() => FormItems?.filter((item: FormItem) => {
             if (isRef(item.used)) return (item.used as Ref).value;
             if (isFunction(item.used)) return (item.used as Function)(FormState.value)
             if (typeof item.used === 'boolean') return item.used
             return true;
-        })),
+        })) || [],
         FormState,
         tiggleForm
     }
 }
 
 // 弹窗表单
-export const useFormModel = (FormOptions: FormOptions & {
-    width: number,
-}, FormItems: FormItem[]) => { 
+export const useFormModel = (FormOptions: ModelFormOptions, FormItems: FormItem[]) => { 
     return useForm(FormOptions, FormItems)
-}
-
-type FormOptions = {
-    title?: string | Ref<string> | (() => string),
-    loading?: Ref<boolean>,
-    // 数据模型，优先级高于defaultValue
-    model?: {[key: string]: any} | Ref<{[key: string]: any}>,
-    // 是否隐藏必填图标
-    hiddenRequireIcon?: boolean,
-    // 表单挂载前
-    onBeforeMount?: (() => Boolean) | (() => Promise<Boolean>),
-    // 表单提交
-    onSubmit?: (() => Boolean) | (() => Promise<Boolean>),
-    // 将会直接绑定传递给【表单组件】
-    options?: { 
-        [key: string]: any
-    }
-}
-
-type FormItem = {
-    label: string | Ref<string> | (() => string),
-    field: string,
-    required?: boolean,
-    type?: 'text' | 'number' | 'radio' | 'select' | 'date' | 'date-range' | 'textarea' | 'checkbox' | 'password' | 'picture' | 'file', // 表单类型
-    dic?: { label: string | Ref<string>, value: string | number | Ref<number> | Ref<string> }[],
-    slot?: string, // 插槽名称
-    defaultValue?: string | Ref<string> | (() => string), // 默认值
-    used?: boolean | Ref<boolean> | ((model: { [key: string]: any }) => boolean), // 是否使用
-    isEmail?: boolean, // 是否是邮箱
-    isInt?: boolean, // 是否是正整数
-    isNoChinese?: boolean, // 是否不含中文字符
-    isNoSpecial?: boolean, // 是否不含特殊字符
-    minValue?: number, // 最小值
-    maxValue?: number, // 最大值
-    maxLength?: number, // 最大长度，type为picture、file时，限制的是媒体个数
-    // 将会直接绑定传递给【表单项组件】
-    options?: { 
-        [key: string]: any
-    },
-    // 将会直接绑定传递给表单【输入组件】
-    inputOptions?: { 
-        [key: string]: any
-    }
 }

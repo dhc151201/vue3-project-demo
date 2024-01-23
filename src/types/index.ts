@@ -55,4 +55,52 @@ export type TableColumns = {
     date?: true, // 日期渲染
     dateFormat?: string, // 日期格式
     dic?: any[] | Record, // 枚举渲染
+    picture?: true, // 图片渲染
 }[]
+
+
+export type FormOptions = {
+    title?: string | Ref<string> | (() => string),
+    loading?: Ref<boolean>,
+    // 数据模型，优先级高于defaultValue
+    model?: {[key: string]: any} | Ref<{[key: string]: any}>,
+    // 是否隐藏必填图标
+    hiddenRequireIcon?: boolean,
+    // 表单挂载前
+    onBeforeMount?: (() => Boolean) | (() => Promise<Boolean>),
+    // 表单提交
+    onSubmit?: (() => Boolean) | (() => Promise<Boolean>),
+    items: FormItem[],
+    // 将会直接绑定传递给【表单组件】
+    options?: { 
+        [key: string]: any
+    }
+}
+export type FormItem = {
+    label: string | Ref<string> | (() => string),
+    field: string,
+    required?: boolean,
+    type?: 'text' | 'number' | 'radio' | 'select' | 'date' | 'date-range' | 'textarea' | 'checkbox' | 'password' | 'picture' | 'file' | 'htmlTextarea', // 表单类型
+    dic?: { label: string | Ref<string>, value: string | number | Ref<number> | Ref<string> }[],
+    slot?: string, // 插槽名称
+    defaultValue?: string | Ref<string> | (() => string), // 默认值
+    used?: boolean | Ref<boolean> | ((model: { [key: string]: any }) => boolean), // 是否使用
+    isEmail?: boolean, // 是否是邮箱
+    isInt?: boolean, // 是否是正整数
+    isNoChinese?: boolean, // 是否不含中文字符
+    isNoSpecial?: boolean, // 是否不含特殊字符
+    minValue?: number, // 最小值
+    maxValue?: number, // 最大值
+    maxLength?: number, // 最大长度，type为picture、file时，限制的是媒体个数
+    // 将会直接绑定传递给【表单项组件】
+    options?: { 
+        [key: string]: any
+    },
+    // 将会直接绑定传递给表单【输入组件】
+    inputOptions?: { 
+        [key: string]: any
+    }
+}
+export type ModelFormOptions = FormOptions & {
+    width: number,
+}

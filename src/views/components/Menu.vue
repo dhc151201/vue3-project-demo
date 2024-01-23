@@ -9,14 +9,14 @@
             </div>
         </div>
         <a-layout-sider v-model:collapsed="collapsed" collapsible :collapsedWidth="0">
-            <a-menu v-model:selectedKeys="selectedKeys" :open-keys="openKeys" :items="menus" mode="inline" theme="dark"></a-menu>
+            <a-menu v-model:selectedKeys="selectedKeys" v-model:open-keys="openKeys" :items="menus" mode="inline" theme="dark" @select="onSelect"></a-menu>
         </a-layout-sider>
     </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue';
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import {getPath} from "@/hooks/useMenus"
 const route = useRoute()
 const props = defineProps({
@@ -29,12 +29,27 @@ const props = defineProps({
 const collapsed = ref(false)
 const openKeys = ref<(string | undefined)[]>([])
 const selectedKeys = ref<(string | undefined)[]>([])
-const toggleCollapsed = () => {
-    collapsed.value = !collapsed.value;
+const setSelecdKeys = () => {
+    console.log(route.path)
     const { path, parent } = getPath(route.path, props.menus)
     selectedKeys.value = [path]
     openKeys.value = [parent]
-};
+}
+const toggleCollapsed = () => {
+    collapsed.value = !collapsed.value;
+    setSelecdKeys()
+}
+
+const router = useRouter()
+const onSelect = ({key}) => {
+    router.replace(key)
+}
+
+onMounted(() => {
+    setTimeout(() => {
+        setSelecdKeys()
+    }, 100)
+})
 
 </script>
 <style lang="less" scoped>

@@ -9,6 +9,11 @@
             <template v-else-if="column.date">
                 {{ text ? dayjs(text).format(column.dateFormat || 'YYYY-MM-DD') : text }}
             </template>
+            <!-- 图片 -->
+            <template v-else-if="column.picture">
+                <template v-if="Array.isArray(text)"><a-image v-for="src of text" :key="src" :width="60" :src="src"/></template>
+                <a-image v-else :width="60" :src="text"/>
+            </template>
             <!-- 枚举渲染 -->
             <template v-else-if="column.dic">
                 {{ column.dic[text] ?? text }}
@@ -35,7 +40,7 @@ const TEST: any = {
     ],
     data: [
         { name: '张三丰', age: 72, sex: 1, date: 1705990341821 },
-        { name: '张三丰', age: 72, sex: 1 },
+        { name: '张三丰', age: 72, sex: 1, src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png' },
         { name: '张三丰', age: 72, sex: 0 },
     ]
 }

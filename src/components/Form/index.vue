@@ -54,6 +54,11 @@
                                 </div>
                             </a-upload>
                         </template>
+                        <!-- 富文本编辑 -->
+                        <template v-else-if="item.type === 'htmlTextarea'">
+                            <Editor v-model:value="model[item.field]" />
+                            <template v-if="item.options?.suffix">{{ item.options?.suffix }}</template>
+                        </template>
                     </template>
                 </a-form-item>
             </template>
@@ -71,6 +76,7 @@ import { useForm } from "@/hooks/useFormModel";
 import Laoding from "@/components/Loading/index.vue"
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons-vue';
 import type { UploadProps } from 'ant-design-vue';
+import Editor from "@/components/Editor/index.vue"
 
 const props = defineProps({
     config: {
@@ -140,6 +146,9 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
 <style lang="less" scoped>
     :deep(.ant-form){
         transition: all 300ms;
+        .ant-input-number{
+            width: 100%;
+        }
     }
     .file{
         :deep(.ant-upload-list-item){
