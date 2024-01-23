@@ -8,6 +8,9 @@ dependencies:
   '@ant-design/icons-vue':
     specifier: ^7.0.1
     version: registry.npmjs.org/@ant-design/icons-vue@7.0.1(vue@3.3.11)
+  '@surely-vue/table':
+    specifier: ^4.2.8
+    version: registry.npmjs.org/@surely-vue/table@4.2.8(vue@3.3.11)
   '@vueuse/core':
     specifier: ^10.7.1
     version: registry.npmjs.org/@vueuse/core@10.7.1(vue@3.3.11)
@@ -17,6 +20,9 @@ dependencies:
   axios:
     specifier: ^1.6.4
     version: registry.npmjs.org/axios@1.6.4
+  dayjs:
+    specifier: ^1.11.10
+    version: registry.npmjs.org/dayjs@1.11.10
   pinia:
     specifier: ^2.1.7
     version: registry.npmjs.org/pinia@2.1.7(typescript@5.3.2)(vue@3.3.11)
@@ -113,10 +119,31 @@ packages:
       '@ctrl/tinycolor': registry.npmjs.org/@ctrl/tinycolor@3.6.1
     dev: false
 
+  registry.npmjs.org/@ant-design/colors@7.0.2:
+    resolution: {integrity: sha512-7KJkhTiPiLHSu+LmMJnehfJ6242OCxSlR3xHVBecYxnMW8MS/878NXct1GqYARyL59fyeFdKRxXTfvR9SnDgJg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@ant-design/colors/-/colors-7.0.2.tgz}
+    name: '@ant-design/colors'
+    version: 7.0.2
+    dependencies:
+      '@ctrl/tinycolor': registry.npmjs.org/@ctrl/tinycolor@3.6.1
+    dev: false
+
   registry.npmjs.org/@ant-design/icons-svg@4.3.1:
     resolution: {integrity: sha512-4QBZg8ccyC6LPIRii7A0bZUk3+lEDCLnhB+FVsflGdcWPPmV+j3fire4AwwoqHV/BibgvBmR9ZIo4s867smv+g==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@ant-design/icons-svg/-/icons-svg-4.3.1.tgz}
     name: '@ant-design/icons-svg'
     version: 4.3.1
+    dev: false
+
+  registry.npmjs.org/@ant-design/icons-vue@6.1.0(vue@3.3.11):
+    resolution: {integrity: sha512-EX6bYm56V+ZrKN7+3MT/ubDkvJ5rK/O2t380WFRflDcVFgsvl3NLH7Wxeau6R8DbrO5jWR6DSTC3B6gYFp77AA==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@ant-design/icons-vue/-/icons-vue-6.1.0.tgz}
+    id: registry.npmjs.org/@ant-design/icons-vue/6.1.0
+    name: '@ant-design/icons-vue'
+    version: 6.1.0
+    peerDependencies:
+      vue: '>=3.0.3'
+    dependencies:
+      '@ant-design/colors': registry.npmjs.org/@ant-design/colors@6.0.0
+      '@ant-design/icons-svg': registry.npmjs.org/@ant-design/icons-svg@4.3.1
+      vue: registry.npmjs.org/vue@3.3.11(typescript@5.3.2)
     dev: false
 
   registry.npmjs.org/@ant-design/icons-vue@7.0.1(vue@3.3.11):
@@ -1038,6 +1065,23 @@ packages:
     dependencies:
       core-js: registry.npmjs.org/core-js@3.35.0
       nanopop: registry.npmjs.org/nanopop@2.3.0
+    dev: false
+
+  registry.npmjs.org/@surely-vue/table@4.2.8(vue@3.3.11):
+    resolution: {integrity: sha512-JePhAhNujIkk7j6joqtYqI6hnpeBZJmz1EH1GTY3cL4+MNnNEHbIzvMt6oNy7p5YWrk7WPW0CUWNOGqwwvhoBg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@surely-vue/table/-/table-4.2.8.tgz}
+    id: registry.npmjs.org/@surely-vue/table/4.2.8
+    name: '@surely-vue/table'
+    version: 4.2.8
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      vue: ^3.2.34
+    dependencies:
+      '@ant-design/colors': registry.npmjs.org/@ant-design/colors@7.0.2
+      '@ant-design/icons-vue': registry.npmjs.org/@ant-design/icons-vue@6.1.0(vue@3.3.11)
+      ant-design-vue: registry.npmjs.org/ant-design-vue@4.0.8(vue@3.3.11)
+      lodash-es: registry.npmjs.org/lodash-es@4.17.21
+      resize-observer-polyfill: registry.npmjs.org/resize-observer-polyfill@1.5.1
+      vue: registry.npmjs.org/vue@3.3.11(typescript@5.3.2)
     dev: false
 
   registry.npmjs.org/@tsconfig/node18@18.2.2:

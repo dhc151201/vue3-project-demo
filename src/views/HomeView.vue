@@ -61,4 +61,5 @@ const config = {
 
 <template>
   <ModelFormBtn :config="config">Open Modal</ModelFormBtn>
+  <DcTable></DcTable>
 </template>

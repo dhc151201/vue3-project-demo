@@ -47,3 +47,12 @@ export type RequestResult = {
     // 刷新接口
     refresh: (query?: Record) => Promise<any>;
 }
+
+export type TableColumns = {
+    title: string,
+    dataIndex: string,
+    slot?: string, //自定义插槽
+    date?: true, // 日期渲染
+    dateFormat?: string, // 日期格式
+    dic?: any[] | Record, // 枚举渲染
+}[]

@@ -1,6 +1,72 @@
 /**全局样式文件*/
 @import url('./thame.less');
 
+// 加载
+.ant-spin {
+    .ant-spin-dot-item{
+        background-color: @text-label-color;
+    }
+}
+
+// 空数据
+.ant-empty{
+    .ant-empty-image{
+        opacity: 0.6;
+    }
+    .ant-empty-description{
+        color: @text-label-color;
+        opacity: 0.5;
+    }
+}
+
+// 表格
+.ant-table-wrapper {
+    background-color: transparent;
+    .ant-table{
+        background-color: transparent;
+    }
+    .ant-table-content{
+        background-color: @bg-blank-light !important;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+    .ant-table-thead {
+        .ant-table-cell {
+            background-color: @bg-blank !important;
+        }
+        &>tr>th{
+            border-bottom-color: @bg-blank !important;
+            color: @text-label-color;
+            &:not(:last-child)::before{
+                background-color: transparent !important;
+            }
+        }
+    }
+    .ant-table-tbody{
+        .ant-table-cell {
+            background-color: inherit !important;
+        }
+        tr>td{
+            border-top-color: @border-color !important;
+            color: @text-light-color;
+        }
+        & >tr:last-child>td{
+            border-bottom-color: @bg-blank !important;
+        }
+    }
+    .ant-pagination{
+        background-color: @bg-blank-light;
+        margin: 0 !important;
+        padding: 16px 0;
+    }
+
+    .ant-spin-blur{
+        .ant-table-content{
+            min-height: 100px;
+        }
+    }
+}
+
 //分页条
 .ant-pagination {
     .ant-pagination-item-link {

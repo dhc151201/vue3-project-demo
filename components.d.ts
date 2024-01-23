@@ -25,6 +25,7 @@ declare module 'vue' {
     ARangePicker: typeof import('ant-design-vue/es')['RangePicker']
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASpin: typeof import('ant-design-vue/es')['Spin']
+    ATable: typeof import('ant-design-vue/es')['Table']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
     AUpload: typeof import('ant-design-vue/es')['Upload']
     Form: typeof import('./src/components/Form/index.vue')['default']
@@ -34,5 +35,6 @@ declare module 'vue' {
     ModelFormBtn: typeof import('./src/components/ModelFormBtn/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Table: typeof import('./src/components/Table/index.vue')['default']
   }
 }
