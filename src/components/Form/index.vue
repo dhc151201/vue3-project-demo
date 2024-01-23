@@ -4,7 +4,7 @@
             opacity: Visable ? 1 : 0.1
         }" v-bind="prop" ref="RefForm" :model="model">
             <template v-for="item of items">
-                <!-- {{ item.isRander  }} -->
+                <!-- {{ item  }} -->
                 <a-form-item v-bind="item.options">
                     <template v-if="item.slot">
                         <slot :name="item.slot" :model="model" :option="item"></slot>

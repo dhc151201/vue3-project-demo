@@ -28,8 +28,14 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
         else if (isRef(item.defaultValue)) {
             FormModel.value[item.field] = (item.defaultValue as Ref).value
         }
-        else if(item.type === 'picture' || item.type === 'file') {
-            FormModel.value[item.field] = item.defaultValue || []
+        else if (item.type === 'picture' || item.type === 'file') {
+            if (!item.defaultValue) {
+                FormModel.value[item.field] = []
+            } else if (Array.isArray(item.defaultValue)) {
+                FormModel.value[item.field] = item.defaultValue
+            } else {
+                FormModel.value[item.field] = [item.defaultValue]
+            }
         }
         else {
             FormModel.value[item.field] = item.defaultValue || ''
