@@ -1,6 +1,20 @@
 /**全局样式文件*/
 @import url('./thame.less');
 
+// 按钮
+.ant-btn{
+    &+.ant-btn{
+        margin-left: 0.5rem;
+    }
+    &.ant-btn-primary{
+        &[disabled]{
+            color: @color-primary;
+            border-color: @color-primary;
+            opacity: 0.8;
+        }
+    }
+}
+
 // 卡片
 .ant-card{
     margin-top: 1rem;

@@ -2,12 +2,21 @@
   <a-card title="商品列表" size="small" :bordered="false">
     <template #extra>
       <ModelFormBtn :config="addEditconfig">新增</ModelFormBtn>
+      <BtnExport>导出</BtnExport>
     </template>
-    <DcTable :columns="columns"></DcTable>
+    <DcTable :columns="columns">
+      <template #oper="{record}">
+        <a-button type="primary" size="small" ghost>编辑</a-button>
+        <a-button type="primary" size="small" ghost>置顶</a-button>
+        <a-button type="primary" size="small" ghost>上下架</a-button>
+        <a-button type="primary" size="small" ghost danger>删除</a-button>
+      </template>
+    </DcTable>
   </a-card>
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
+import BtnExport from "@/components/Export/index.vue"
 import type { TableColumns, ModelFormOptions } from "@/types/index"
 const columns: TableColumns = [
     { title: "商品名称", dataIndex: 'name', },
@@ -15,6 +24,7 @@ const columns: TableColumns = [
     { title: "购买所需积分", dataIndex: 'ss', },
     { title: "创建时间", dataIndex: 'time', },
     { title: "修改时间", dataIndex: 'up_time', },
+    { title: "操作", slot: 'oper', width: 300, align: 'center' },
 ]
 
 const addEditconfig = computed((): ModelFormOptions => {

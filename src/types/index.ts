@@ -50,7 +50,9 @@ export type RequestResult = {
 
 export type TableColumns = {
     title: string,
-    dataIndex: string,
+    dataIndex?: string,
+    width?: number,
+    align?: 'center' | 'right'
     slot?: string, //自定义插槽
     date?: true, // 日期渲染
     dateFormat?: string, // 日期格式

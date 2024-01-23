@@ -32,6 +32,7 @@ declare module 'vue' {
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
     AUpload: typeof import('ant-design-vue/es')['Upload']
     Editor: typeof import('./src/components/Editor/index.vue')['default']
+    Export: typeof import('./src/components/Export/index.vue')['default']
     Form: typeof import('./src/components/Form/index.vue')['default']
     Layout: typeof import('./src/components/Layout/index.vue')['default']
     Loading: typeof import('./src/components/Loading/index.vue')['default']
