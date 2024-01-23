@@ -9,7 +9,7 @@
             <template v-else-if="column.date">
                 {{ text ? dayjs(text).format(column.dateFormat || 'YYYY-MM-DD') : text }}
             </template>
-            <!-- 枚举 -->
+            <!-- 枚举渲染 -->
             <template v-else-if="column.dic">
                 {{ column.dic[text] ?? text }}
             </template>
