@@ -191,4 +191,36 @@
     .ant-form:first-child{
         margin-top: 1.5rem;
     }
+    .ant-modal-header,
+    .ant-modal-content{
+        background-color: @bg-blank-light;
+    }
+    .ant-modal-title{
+        color: @text-light-color
+    }
+}
+
+
+.ant-form{
+    .ant-form-item,
+    .ant-form-item .ant-form-item-label >label{
+        color: @text-light-color
+    }
+}
+.ant-input-number-input,
+.ant-input{
+    background-color: @bg-blank !important;
+    border-color: @border-color !important;
+    color: @text-light-color !important;
+    &::placeholder{ 
+        color: @text-label-color !important;
+        opacity: 0.3; 
+    }
+}
+.ant-input-number{
+    border-color: @border-color !important;
+    background-color: @bg-blank !important;
+}
+.ant-upload{
+    color: @text-light-color !important;
 }
