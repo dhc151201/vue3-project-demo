@@ -1,12 +1,12 @@
 <template>
     <a-card title="提现管理" size="small" :bordered="false">
       <template #extra>
-        <a-input v-model:value="query.user" placeholder="会员账号" />
-        <a-input v-model:value="query.user" placeholder="会员手机号" />
-        <a-input v-model:value="query.user" placeholder="推广员账号" />
-        <a-date-picker v-model:value="query.user" placeholder="提现申请时间" class="date" />
-        <a-input v-model:value="query.user" placeholder="提现订单号" />
-        <a-select v-model:value="query.user" :options="statusOptions" placeholder="提现状态" class="date" />
+        <a-input v-model:value="query.keyword" placeholder="会员账号" />
+        <a-input v-model:value="query.keyword" placeholder="会员手机号" />
+        <a-input v-model:value="query.keyword" placeholder="推广员账号" />
+        <a-date-picker v-model:value="query.keyword" placeholder="提现申请时间" class="date" />
+        <a-input v-model:value="query.keyword" placeholder="提现订单号" />
+        <a-select v-model:value="query.keyword" :options="statusOptions" placeholder="提现状态" class="date" />
         <a-button @click="refreshTable" type="primary">搜索</a-button>
         <BtnExport />
       </template>
