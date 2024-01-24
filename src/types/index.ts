@@ -65,13 +65,16 @@ export type FormOptions = {
     title?: string | Ref<string> | (() => string),
     loading?: Ref<boolean>,
     // 数据模型，优先级高于defaultValue
-    model?: {[key: string]: any} | Ref<{[key: string]: any}>,
-    // 是否隐藏必填图标
-    hiddenRequireIcon?: boolean,
+    model?: { [key: string]: any } | Ref<{ [key: string]: any }>,
+    // 是否只读
+    readonly?: boolean,
     // 表单挂载前
     onBeforeMount?: (() => Boolean) | (() => Promise<Boolean>),
     // 表单提交
     onSubmit?: (() => Boolean) | (() => Promise<Boolean>),
+    // 内建的api直接提交，优先级低于onSubmit
+    api?: string | Ref<string>,
+    // 表单项
     items: FormItem[],
     // 将会直接绑定传递给【表单组件】
     options?: { 

@@ -77,6 +77,7 @@ import Laoding from "@/components/Loading/index.vue"
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons-vue';
 import type { UploadProps } from 'ant-design-vue';
 import Editor from "@/components/Editor/index.vue"
+import useRequest from "@/hooks/useRequest";
 
 const props = defineProps({
     config: {
@@ -107,10 +108,20 @@ const handelSubmit = async () => {
         await RefForm.value?.validateFields()
         if (props.config.onSubmit) {
             await props.config.onSubmit(model.value)
+        } else if (props.config.api) {
+            Visable.value = false
+            const { run } = useRequest(props.config.api, {
+                manual: true,
+                method: 'post',
+                defaultParams: () => model.value
+            })
+            await run()
         }
         return model.value
     } catch (e) {
         throw '表单验证未通过'
+    } finally {
+        Visable.value = true
     }
 }
 defineExpose({
