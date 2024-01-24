@@ -1,12 +1,17 @@
 <template>
   <a-card title="商品列表" size="small" :bordered="false">
     <template #extra>
+      <a-input-search
+        v-model:value="query.keyword"
+        placeholder="商品名称"
+        enter-button
+        @search="refreshTable"
+      />
       <ModelFormBtn :config="addConfig">新增</ModelFormBtn>
       <BtnExport>导出</BtnExport>
     </template>
-    <DcTable :columns="columns">
+    <DcTable :columns="columns" :query="query">
       <template #oper="{record}">
-        <ModelFormBtn :config="editConfig" size="small" ghost @click="handelView(record)">查看</ModelFormBtn>
         <ModelFormBtn :config="editConfig" size="small" ghost @click="handelEdit(record)">编辑</ModelFormBtn>
         <a-button type="primary" size="small" ghost>置顶</a-button>
         <a-button type="primary" size="small" ghost>上下架</a-button>
@@ -16,9 +21,15 @@
   </a-card>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import BtnExport from "@/components/Export/index.vue"
 import type { TableColumns, ModelFormOptions } from "@/types/index"
+
+const query = ref<{keyword: string}>({keyword: ''})
+const refTable = ref()
+const refreshTable = () => {
+  refTable.value?.refresh({page: 1})
+}
 const columns: TableColumns = [
     { title: "商品名称", dataIndex: 'name', },
     { title: "商品图片", dataIndex: 'src', picture: true },
@@ -30,7 +41,7 @@ const columns: TableColumns = [
 
 const addConfig = ref<ModelFormOptions>({
     title: '新增',
-  width: 1000,
+    width: 1000,
     api: '/errr',
     // onSubmit: (values) => {
     //   debugger
@@ -113,13 +124,6 @@ const editConfig = ref<ModelFormOptions>({
 
 const handelEdit = (record: any) => {
   editConfig.value.readonly = false
-  editConfig.value.model = {
-    ...record,
-    src: record.src
-  }
-}
-const handelView = (record: any) => {
-  editConfig.value.readonly = true
   editConfig.value.model = {
     ...record,
     src: record.src

@@ -24,6 +24,18 @@ const router = createRouter({
       path: '/manager-goods',
       component: () => import('@/views/manager-goods/index.vue'),
     },
+    {
+      path: '/manager-order',
+      component: () => import('@/views/manager-orders/index.vue'),
+    },
+    {
+      path: '/manager-spread',
+      component: () => import('@/views/manager-spread/index.vue'),
+    },
+    {
+      path: '/manager-recharge',
+      component: () => import('@/views/manager-recharge/index.vue'),
+    }
   ]
 })
 
