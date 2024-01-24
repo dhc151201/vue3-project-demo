@@ -130,13 +130,13 @@ const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
  */
 const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
     const inputOptions = {
-        placeholder: "请输入",
+        placeholder: FormOptions.readonly || "请输入",
         readonly: FormOptions.readonly,
     }
     if (item.type === 'select' || item.type === 'checkbox' || item.type === 'radio') {
         Object.assign(inputOptions, {
             options: item.dic || [],
-            placeholder: "请选择",
+            placeholder: FormOptions.readonly || "请选择",
             showArrow: !FormOptions.readonly,
             allowClear: !FormOptions.readonly,
             name: item.field,
@@ -154,7 +154,7 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
     }
     if (item.type === 'date' || item.type === 'date-range') {
         Object.assign(inputOptions, {
-            placeholder: item.type === 'date' ? "请选择" : ['开始日期', '结束日期'],
+            placeholder: FormOptions.readonly || (item.type === 'date' ? "请选择" : ['开始日期', '结束日期']),
             inputReadOnly: true,
             format: 'YYYY-MM-DD',
             valueFormat: 'YYYY-MM-DD',
@@ -169,9 +169,9 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
 export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
 
     const FormState = ref<{ [key: string]: any }>({})
-    const FormProps = ref<any>([])
-
-    FormProps.value = FormOptions.options
+    const FormProps = computed(() => {
+        return Object.assign(isRef(FormOptions.options) ? FormOptions.options.value : FormOptions.options ?? {}, { readonly: FormOptions.readonly })
+    })
 
     FormItems?.forEach((item: FormItem) => {
         handelDefaultValue(item, FormOptions, FormState)

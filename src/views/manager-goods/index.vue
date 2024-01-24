@@ -102,6 +102,7 @@ const addConfig = ref<ModelFormOptions>({
 const editConfig = ref<ModelFormOptions>({
     ...addConfig.value,
     title: `编辑`,
+    readonly: true,
     model: {},
     onSubmit: (values) => {
       debugger

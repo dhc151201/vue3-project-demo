@@ -1,7 +1,8 @@
 <template>
     <Laoding :loading="loading" noBg tip="">
-        <a-form :style="{
-            opacity: Visable ? 1 : 0.1
+        <a-form :class="{
+            'form-loading' : !Visable,
+            'form-readonly' : prop.readonly
         }" v-bind="prop" ref="RefForm" :model="model">
             <template v-for="item of items">
                 <!-- {{ item  }} -->
@@ -156,6 +157,20 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
 };
 </script>
 <style lang="less" scoped>
+    .form-loading{
+        opacity: 0.1;
+        
+    }
+    .form-readonly{
+        .ant-form-item{
+            pointer-events: none;
+        }
+        :deep(.ant-upload-select),
+        .upload-tip,
+        :deep(.btns){
+            display: none !important;
+        }
+    }
     :deep(.ant-form){
         transition: all 300ms;
         .ant-input-number,
