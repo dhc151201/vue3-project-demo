@@ -183,7 +183,7 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
 
     const FormState = ref<{ [key: string]: any }>({})
     const FormProps = computed(() => {
-        return Object.assign(isRef(FormOptions.options) ? FormOptions.options.value : FormOptions.options ?? {}, { readonly: FormOptions.readonly })
+        return Object.assign((isRef(FormOptions.options) ? FormOptions.options.value : FormOptions.options) ?? {}, { readonly: FormOptions.readonly })
     })
 
     FormItems?.forEach((item: FormItem) => {
