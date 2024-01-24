@@ -31,7 +31,7 @@
                                 @preview="handlePreview"
                                 v-bind="item.inputOptions"
                             >
-                                <div v-if="!item.maxLength || model[item.field].length < item.maxLength">
+                                <div v-if="!model[item.field] || !item.maxLength || model[item.field].length < item.maxLength">
                                     <plus-outlined />
                                     <div style="margin-top: 8px">选择文件</div>
                                 </div>
@@ -47,7 +47,7 @@
                                 :class="'file'"
                                 v-bind="item.inputOptions"
                             >
-                                <div v-if="!item.maxLength || model[item.field].length < item.maxLength">
+                                <div v-if="!model[item.field] || !item.maxLength || model[item.field].length < item.maxLength">
                                     <a-button>
                                         <upload-outlined></upload-outlined>
                                         选择文件

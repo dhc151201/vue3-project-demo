@@ -5,6 +5,7 @@ import { isEmailStr, isFunction, isObject } from "@/utils"
 import {isRef, ref, watch, computed} from "vue"
 import type { Ref } from "vue"
 import type { ModelFormOptions,FormItem, FormOptions, Record } from "@/types"
+import dayjs from "dayjs"
 
 /**
  * 默认值处理
@@ -36,25 +37,39 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
 
     const setDefaultValue = () => {
         const model: any = isRef(FormOptions.model) ? FormOptions.model.value : FormOptions.model ?? {};
+        const modelFieldValue = model[item.field]
 
-        if (model[item.field]) {
-            FormModel.value[item.field] = model[item.field]
+        if (modelFieldValue) {
+            if (item.type === 'picture' || item.type === 'file') {
+                FormModel.value[item.field] = createPictureFileObj(modelFieldValue)
+            }
+            else if (item.type === 'date') {
+                FormModel.value[item.field] = dayjs(modelFieldValue)
+            }
+            else if (item.type === 'date-range') {
+                if (Array.isArray(modelFieldValue)) {
+                    FormModel.value[item.field] = [
+                        modelFieldValue[0] ? dayjs(modelFieldValue[0]) : undefined,
+                        modelFieldValue[1] ? dayjs(modelFieldValue[1]) : undefined
+                    ]
+                }
+            } else {
+                FormModel.value[item.field] = modelFieldValue
+            }
         }
-        else if (isFunction(item.defaultValue)) {
-            FormModel.value[item.field] = (item.defaultValue as Function)()
-        }
-        else if (isRef(item.defaultValue)) {
-            FormModel.value[item.field] = (item.defaultValue as Ref).value
-        }
-        else if (item.type !== 'select') {
-            FormModel.value[item.field] = item.defaultValue || ''
+        else {
+            if (isFunction(item.defaultValue)) {
+                FormModel.value[item.field] = (item.defaultValue as Function)()
+            }
+            else if (isRef(item.defaultValue)) {
+                FormModel.value[item.field] = (item.defaultValue as Ref).value
+            }
+            else {
+                FormModel.value[item.field] = item.defaultValue
+            }
         }
 
-        // 图片 or 文件
-        if (item.type === 'picture' || item.type === 'file') {
-            FormModel.value[item.field] = createPictureFileObj(FormModel.value[item.field])
-        }
-
+        
     }
 
     // 默认表单模型变化，used变化

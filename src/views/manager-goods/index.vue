@@ -6,6 +6,7 @@
     </template>
     <DcTable :columns="columns">
       <template #oper="{record}">
+        <ModelFormBtn :config="editConfig" size="small" ghost @click="handelView(record)">查看</ModelFormBtn>
         <ModelFormBtn :config="editConfig" size="small" ghost @click="handelEdit(record)">编辑</ModelFormBtn>
         <a-button type="primary" size="small" ghost>置顶</a-button>
         <a-button type="primary" size="small" ghost>上下架</a-button>
@@ -110,6 +111,14 @@ const editConfig = ref<ModelFormOptions>({
 })
 
 const handelEdit = (record: any) => {
+  editConfig.value.readonly = false
+  editConfig.value.model = {
+    ...record,
+    src: record.src
+  }
+}
+const handelView = (record: any) => {
+  editConfig.value.readonly = true
   editConfig.value.model = {
     ...record,
     src: record.src
