@@ -20,13 +20,13 @@ const columns: TableColumns = [
 ]
 
 const addConfig = ref<ModelFormOptions>({
-    title: '新增',
+    title: '充值',
     width: 400,
     onSubmit: (values) => {
     },
     items: [
       {
-        label: "重置金额",
+        label: "充值金额",
         field: 'name'
       },
       {
