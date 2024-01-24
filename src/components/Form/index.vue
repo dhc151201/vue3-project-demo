@@ -87,6 +87,7 @@ const props = defineProps({
         default: () => ({})
     }
 })
+const emits = defineEmits(['submit-success'])
 
 const {
     FormProps: prop,
@@ -118,6 +119,7 @@ const handelSubmit = async () => {
                 defaultParams: () => model.value
             })
             await run()
+            emits('submit-success')
         }
         return model.value
     } catch (e) {

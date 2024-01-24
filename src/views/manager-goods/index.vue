@@ -30,10 +30,11 @@ const columns: TableColumns = [
 
 const addConfig = ref<ModelFormOptions>({
     title: '新增',
-    width: 1000,
-    onSubmit: (values) => {
-      debugger
-    },
+  width: 1000,
+    api: '/errr',
+    // onSubmit: (values) => {
+    //   debugger
+    // },
     items: [
       {
         label: "商品名称",

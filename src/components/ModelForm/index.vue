@@ -1,6 +1,6 @@
 <template>
     <a-modal v-model:open="visable" :title="config.title" :width="config.width" :footer="null" :maskClosable="false">
-        <Form v-if="RandelForm" :config="config">
+        <Form v-if="RandelForm" :config="config" @submit-success="visable = false">
             <template #default="{submit, loading}">
                 <div class="btns">
                     <a-button @click.prevent="cancel">取消</a-button>
