@@ -42,7 +42,7 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
         }
     }
 
-    // 表单模型变化
+    // 默认表单模型变化，used变化
     watch(() => {
         const model = FormOptions.model || {}
         return {
