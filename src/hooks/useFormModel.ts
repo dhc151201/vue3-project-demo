@@ -132,7 +132,7 @@ const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
     item.options = Object.assign(item.options || {}, {
         label: item.label,
         name: item.field,
-        required: FormOptions.hiddenRequireIcon || item.required,
+        required: FormOptions.readonly ? false : item.required,
     })
 }
 
