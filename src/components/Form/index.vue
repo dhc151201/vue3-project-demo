@@ -19,8 +19,9 @@
                         <a-date-picker v-else-if="item.type == 'date'" v-model:value="model[item.field]" v-bind="item.inputOptions" v-trim/>
                         <a-range-picker v-else-if="item.type == 'date-range'" v-model:value="model[item.field]" v-bind="item.inputOptions" v-trim/>
                         <a-checkbox-group v-else-if="item.type == 'checkbox'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
-                        <a-radio-group v-else-if="item.type == 'radio'" v-model:value="model[item.field]"  v-bind="item.inputOptions"/>
-                        <a-select v-else-if="item.type == 'select'" v-model:value="model[item.field]"  v-bind="item.inputOptions"/>
+                        <a-radio-group v-else-if="item.type == 'radio'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
+                        <a-select v-else-if="item.type == 'select'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
+                        <a-switch v-else-if="item.type == 'switch'" v-model:checked="model[item.field]" v-bind="item.inputOptions"/>
                         <!-- 图片上传 -->
                         <template v-else-if="item.type == 'picture'">
                             <a-upload
@@ -34,7 +35,7 @@
                                     <div style="margin-top: 8px">选择文件</div>
                                 </div>
                             </a-upload>
-                            <span v-if="item.maxLength">最多上传{{item.maxLength}}个图片</span>
+                            <span v-if="item.maxLength" class="upload-tip">最多上传{{item.maxLength}}个图片</span>
                         </template>
                         <!-- 文件上传 -->
                         <template v-else-if="item.type == 'file'">
@@ -50,7 +51,7 @@
                                         <upload-outlined></upload-outlined>
                                         选择文件
                                     </a-button>
-                                    <span v-if="item.maxLength">最多上传{{item.maxLength}}个文件</span>    
+                                    <span @click.stop v-if="item.maxLength" style="margin-left: 0.5rem;" class="upload-tip">最多上传{{item.maxLength}}个文件</span>    
                                 </div>
                             </a-upload>
                         </template>
@@ -157,7 +158,10 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
 <style lang="less" scoped>
     :deep(.ant-form){
         transition: all 300ms;
-        .ant-input-number{
+        .ant-input-number,
+        .ant-select,
+        .ant-picker
+        {
             width: 100%;
         }
     }
@@ -172,5 +176,9 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
             width: 1rem !important;
             height: 1rem !important;
         }
+    }
+    .upload-tip{
+        color: @text-label-color;
+        font-size: 0.8rem;
     }
 </style>

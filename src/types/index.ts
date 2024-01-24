@@ -85,7 +85,7 @@ export type FormItem = {
     label: string | Ref<string> | (() => string),
     field: string,
     required?: boolean,
-    type?: 'text' | 'number' | 'radio' | 'select' | 'date' | 'date-range' | 'textarea' | 'checkbox' | 'password' | 'picture' | 'file' | 'htmlTextarea', // 表单类型
+    type?: 'text' | 'number' | 'radio' | 'select' | 'date' | 'date-range' | 'textarea' | 'checkbox' | 'password' | 'picture' | 'file' | 'htmlTextarea' | 'switch', // 表单类型
     dic?: { label: string | Ref<string>, value: string | number | Ref<number> | Ref<string> }[],
     slot?: string, // 插槽名称
     defaultValue?: string | Ref<string> | (() => string), // 默认值

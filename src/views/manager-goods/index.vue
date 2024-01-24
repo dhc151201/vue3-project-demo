@@ -27,42 +27,9 @@ const columns: TableColumns = [
     { title: "操作", slot: 'oper', width: 260, align: 'center' },
 ]
 
-const editInfo = ref({})
 const addConfig = ref<ModelFormOptions>({
     title: '新增',
     width: 1000,
-    onSubmit: (values) => {
-      debugger
-     },
-    items: [
-      {
-        label: "商品名称",
-        field: 'name'
-      },
-      {
-        label: "商品图片",
-        field: 'src',
-        type: "picture",
-        maxLength: 1
-      },
-      {
-        label: "购买积分",
-        field: 'jf',
-        type: "number",
-        minValue: 0
-      },
-      {
-        label: "商品详情",
-        field: 'context',
-        type: "htmlTextarea",
-        minValue: 0
-      },
-    ]
-})
-const editConfig = ref<ModelFormOptions>({
-    title: `编辑`,
-    width: 1000,
-    model: {},
     onSubmit: (values) => {
       debugger
     },
@@ -78,18 +45,67 @@ const editConfig = ref<ModelFormOptions>({
         maxLength: 1
       },
       {
-        label: "购买积分",
-        field: 'jf',
-        type: "number",
-        minValue: 0
+        label: "文件",
+        field: 'filefs',
+        type: "file",
+        maxLength: 3
       },
       {
-        label: "商品详情",
-        field: 'context',
-        type: "htmlTextarea",
-        minValue: 0
+        label: "日期",
+        field: 'date',
+        type: "date",
       },
+      {
+        label: "日期范围",
+        field: 'daterange',
+        type: "date-range",
+      },
+      {
+        label: "切换",
+        field: 'a',
+        type: "switch",
+      },
+      {
+        label: "复选",
+        field: 'b',
+        type: "checkbox",
+        dic: [
+          { label: "姓名", value: 1 }, 
+          { label: "性别", value: 2 }, 
+        ]
+      },
+      {
+        label: "单选",
+        field: 'c333',
+        type: "radio",
+        dic: [
+          { label: "姓名", value: 1 }, 
+          { label: "性别", value: 2 }, 
+        ]
+      },
+      {
+        label: "购买积分",
+        field: 'jf',
+        type: "select",
+        dic: [
+          { label: "姓名", value: 1 }, 
+          { label: "性别", value: 2 }, 
+        ]
+      },
+      // {
+      //   label: "商品详情",
+      //   field: 'context',
+      //   type: "htmlTextarea",
+      // },
     ]
+})
+const editConfig = ref<ModelFormOptions>({
+    ...addConfig.value,
+    title: `编辑`,
+    model: {},
+    onSubmit: (values) => {
+      debugger
+    }
 })
 
 const handelEdit = (record: any) => {

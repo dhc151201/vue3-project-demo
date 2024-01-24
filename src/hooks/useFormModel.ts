@@ -46,7 +46,7 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
         else if (isRef(item.defaultValue)) {
             FormModel.value[item.field] = (item.defaultValue as Ref).value
         }
-        else {
+        else if (item.type !== 'select') {
             FormModel.value[item.field] = item.defaultValue || ''
         }
 
@@ -129,20 +129,40 @@ const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
  * @param FormOptions FormOptions配置
  */
 const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
-    item.inputOptions = {
-        placeholder: "请输入"
+    const inputOptions = {
+        placeholder: "请输入",
+        readonly: FormOptions.readonly,
     }
-
+    if (item.type === 'select' || item.type === 'checkbox' || item.type === 'radio') {
+        Object.assign(inputOptions, {
+            options: item.dic || [],
+            placeholder: "请选择",
+            showArrow: !FormOptions.readonly,
+            allowClear: !FormOptions.readonly,
+            name: item.field,
+        })
+    }
     if (item.type === 'picture' || item.type === 'file') {
-        Object.assign(item.inputOptions, {
+        Object.assign(inputOptions, {
             action: '',
             name: item.field,
             accept: item.type === 'picture' ? 'image/*' : '',
-            beforeUpload: (file, fileList) => {
+            beforeUpload: () => {
                 return false
             }
-        }, item.inputOptions)
+        })
     }
+    if (item.type === 'date' || item.type === 'date-range') {
+        Object.assign(inputOptions, {
+            placeholder: item.type === 'date' ? "请选择" : ['开始日期', '结束日期'],
+            inputReadOnly: true,
+            format: 'YYYY-MM-DD',
+            valueFormat: 'YYYY-MM-DD',
+            showToday: false,
+        })
+    }
+
+    item.inputOptions = Object.assign(item.inputOptions || {}, inputOptions)
 }
 
 // 表单
