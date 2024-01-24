@@ -27,7 +27,7 @@
         { label: "审核拒绝", value: 1 }, 
         { label: "待审通过", value: 2 }, 
   ]
-  const query = ref<{keyword: string}>({keyword: ''})
+  const query = ref<{keyword?: string}>({keyword: undefined})
   const refTable = ref()
   const refreshTable = () => {
     refTable.value?.refresh({page: 1})
@@ -107,7 +107,7 @@
   })
   </script>
   <style lang="less" scoped>
-  .date,
+  .date :deep(.ant-select-selector),
   .date :deep(input){
     width: 140px !important;
   }
