@@ -34,7 +34,7 @@
         "small": "16px",
         "large": "30px"
       }[props.size],
-      color: "#d0d4d6"
+      color: "rgb(92, 126, 229)"
     },
     spin: true,
   });
@@ -45,7 +45,7 @@
   }
   
   :deep(.ant-spin-text) {
-    color: #d0d4d6;
+    color: @color-primary;
     font-size: 13px;
     margin-top: 10px;
   }

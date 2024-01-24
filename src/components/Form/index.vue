@@ -163,7 +163,7 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
 </script>
 <style lang="less" scoped>
     .form-loading{
-        opacity: 0.3;
+        filter: blur(3px);
     }
     .form-readonly{
         .ant-form-item{
