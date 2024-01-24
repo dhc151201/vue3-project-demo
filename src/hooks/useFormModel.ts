@@ -68,8 +68,6 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
                 FormModel.value[item.field] = item.defaultValue
             }
         }
-
-        
     }
 
     // 默认表单模型变化，used变化
@@ -145,13 +143,13 @@ const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
  */
 const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
     const inputOptions = {
-        placeholder: FormOptions.readonly || "请输入",
+        placeholder: FormOptions.readonly ? '' : "请输入",
         readonly: FormOptions.readonly,
     }
     if (item.type === 'select' || item.type === 'checkbox' || item.type === 'radio') {
         Object.assign(inputOptions, {
             options: item.dic || [],
-            placeholder: FormOptions.readonly || "请选择",
+            placeholder: FormOptions.readonly ? '' : "请选择",
             showArrow: !FormOptions.readonly,
             allowClear: !FormOptions.readonly,
             name: item.field,
@@ -169,7 +167,7 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
     }
     if (item.type === 'date' || item.type === 'date-range') {
         Object.assign(inputOptions, {
-            placeholder: FormOptions.readonly || (item.type === 'date' ? "请选择" : ['开始日期', '结束日期']),
+            placeholder: FormOptions.readonly ? '' : (item.type === 'date' ? "请选择" : ['开始日期', '结束日期']),
             inputReadOnly: true,
             format: 'YYYY-MM-DD',
             valueFormat: 'YYYY-MM-DD',
