@@ -7,7 +7,10 @@
             <template v-for="item of items">
                 <!-- {{ item  }} -->
                 <a-form-item v-bind="item.options">
-                    <template v-if="item.slot">
+                    <template v-if="prop.readonly">
+                        {{ model[item.field] ?? '--' }}
+                    </template>
+                    <template v-else-if="item.slot">
                         <slot :name="item.slot" :model="model" :option="item"></slot>
                     </template>
                     <template v-else>
@@ -171,6 +174,14 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
         .upload-tip,
         :deep(.btns){
             display: none !important;
+        }
+        :deep(.ant-form-item){
+            .ant-form-item-label >label{
+                height: unset;
+            }
+            .ant-form-item-control-input{
+                min-height: unset;
+            }
         }
     }
     :deep(.ant-form){

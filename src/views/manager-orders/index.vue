@@ -8,18 +8,17 @@
       <a-input v-model:value="query.user" placeholder="订单号" />
       <a-input v-model:value="query.user" placeholder="物流单号" />
       <a-button @click="refreshTable" type="primary">搜索</a-button>
-      <BtnExport>导出</BtnExport>
+      <BtnExport />
     </template>
-    <DcTable :columns="columns">
+    <DcTable ref="refTable" :columns="columns">
       <template #oper="{record}">
-        <BtnExport :query="record">导出</BtnExport>
+        <BtnExport :query="record" />
       </template>
     </DcTable>
   </a-card>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import BtnExport from "@/components/Export/index.vue"
 import type { TableColumns } from "@/types/index"
 
 const query = ref<{[key: string]: any}>({keyword: ''})

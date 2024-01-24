@@ -1,7 +1,7 @@
 <template>
     <slot name="btn">
         <a-button type="primary" @click="handelExport" v-bind="$attrs" :loading="loading" :disabled="loading">
-            <slot></slot>
+            <slot>导出</slot>
         </a-button>
     </slot>
 </template>

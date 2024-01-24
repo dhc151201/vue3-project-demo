@@ -2,14 +2,13 @@
   <a-card title="充值列表" size="small" :bordered="false">
     <template #extra>
       <ModelFormBtn :config="addConfig">新增</ModelFormBtn>
-      <BtnExport>导出</BtnExport>
+      <BtnExport />
     </template>
     <DcTable :columns="columns"></DcTable>
   </a-card>
 </template>
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import BtnExport from "@/components/Export/index.vue"
 import type { TableColumns, ModelFormOptions } from "@/types/index"
 const columns: TableColumns = [
     { title: "充值金额", dataIndex: 'name', },

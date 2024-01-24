@@ -7,7 +7,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: () => import('@/views/HomeView.vue'),
+      component: () => import('@/views/home.vue'),
       meta: {
         keepAlive: openKeepAlive
       }
@@ -35,6 +35,14 @@ const router = createRouter({
     {
       path: '/manager-recharge',
       component: () => import('@/views/manager-recharge/index.vue'),
+    },
+    {
+      path: '/manager-widthdraw/list',
+      component: () => import('@/views/manager-widthdraw/list.vue'),
+    },
+    {
+      path: '/manager-widthdraw/information',
+      component: () => import('@/views/manager-widthdraw/information.vue'),
     }
   ]
 })

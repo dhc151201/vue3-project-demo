@@ -2,7 +2,7 @@
   <a-card title="推广员列表" size="small" :bordered="false">
     <template #extra>
       <ModelFormBtn :config="addConfig">新增</ModelFormBtn>
-      <BtnExport>导出</BtnExport>
+      <BtnExport />
     </template>
     <DcTable :columns="columns">
       <template #oper="{record}">
@@ -22,7 +22,6 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import BtnExport from "@/components/Export/index.vue"
 import type { TableColumns, ModelFormOptions } from "@/types/index"
 const columns: TableColumns = [
     { title: "可用余额", dataIndex: 'name', },

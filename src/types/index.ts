@@ -75,7 +75,7 @@ export type FormOptions = {
     // 内建的api直接提交，优先级低于onSubmit
     api?: string | Ref<string>,
     // 表单项
-    items: FormItem[],
+    items?: FormItem[],
     // 将会直接绑定传递给【表单组件】
     options?: { 
         [key: string]: any
@@ -88,7 +88,7 @@ export type FormItem = {
     type?: 'text' | 'number' | 'radio' | 'select' | 'date' | 'date-range' | 'textarea' | 'checkbox' | 'password' | 'picture' | 'file' | 'htmlTextarea' | 'switch', // 表单类型
     dic?: { label: string | Ref<string>, value: string | number | Ref<number> | Ref<string> }[],
     slot?: string, // 插槽名称
-    defaultValue?: string | Ref<string> | ((model: Record) => any), // 默认值
+    defaultValue?: string | Ref<string> | number | Ref<number> | ((model: Record) => any), // 默认值
     used?: boolean | Ref<boolean> | ((model: { [key: string]: any }) => boolean), // 是否使用
     isEmail?: boolean, // 是否是邮箱
     isInt?: boolean, // 是否是正整数
@@ -107,5 +107,5 @@ export type FormItem = {
     }
 }
 export type ModelFormOptions = FormOptions & {
-    width: number,
+    width?: number,
 }

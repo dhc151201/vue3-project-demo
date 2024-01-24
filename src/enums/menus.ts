@@ -17,7 +17,17 @@ export default [
     },
     {
         label: "提现中心",
-        key: '/manager-widthdraw'
+        key: '/manager-widthdraw',
+        children: [
+            {
+                label: "提现管理",
+                key: '/manager-widthdraw/list'
+            },
+            {
+                label: "提现资料管理",
+                key: '/manager-widthdraw/information'
+            }
+        ]
     },
     {
         label: "系统设置",

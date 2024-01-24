@@ -8,9 +8,9 @@
         @search="refreshTable"
       />
       <ModelFormBtn :config="addConfig">新增</ModelFormBtn>
-      <BtnExport>导出</BtnExport>
+      <BtnExport />
     </template>
-    <DcTable :columns="columns" :query="query">
+    <DcTable ref="refTable" :columns="columns" :query="query">
       <template #oper="{record}">
         <ModelFormBtn :config="editConfig" size="small" ghost @click="handelEdit(record)">编辑</ModelFormBtn>
         <a-button type="primary" size="small" ghost>置顶</a-button>
@@ -22,7 +22,6 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import BtnExport from "@/components/Export/index.vue"
 import type { TableColumns, ModelFormOptions } from "@/types/index"
 
 const query = ref<{keyword: string}>({keyword: ''})
