@@ -1,10 +1,10 @@
 <template>
     <a-modal v-model:open="visable" :title="config.title" :width="config.width" :footer="null" :maskClosable="false">
-        <Form v-if="RandelForm" :config="config" @submit-success="visable = false">
+        <Form v-if="RandelForm" :config="config" @submit-success="handelSuccess()">
             <template #default="{submit, loading}">
                 <div class="btns">
                     <a-button @click.prevent="cancel">取消</a-button>
-                    <a-button :disabled="loading" type="primary" @click.prevent="submit">确定</a-button>
+                    <a-button :disabled="loading" type="primary" @click.prevent.stop="submit">确定</a-button>
                 </div>
             </template>
         </Form>
@@ -45,6 +45,9 @@ watch(visable, () => {
 })
 
 const cancel = () => {
+    visable.value = false;
+}
+const handelSuccess = () => {
     visable.value = false;
 }
 </script>
