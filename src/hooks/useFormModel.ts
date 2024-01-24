@@ -1,7 +1,7 @@
 /***
  * 表单模型
  */
-import { isEmailStr, isFunction } from "@/utils"
+import { isEmailStr, isFunction, isObject } from "@/utils"
 import {isRef, ref, watch, computed} from "vue"
 import type { Ref } from "vue"
 import type { ModelFormOptions,FormItem, FormOptions, Record } from "@/types"
@@ -13,14 +13,32 @@ import type { ModelFormOptions,FormItem, FormOptions, Record } from "@/types"
  */
 const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<Record>) => {
 
-    const setDefaultValue = () => {
-        const model: any = FormOptions.model || {}
-
-        if (isRef(model) && (model as Ref).value[item.field]) {
-            FormModel.value[item.field] = FormOptions.model?.value[item.field]
+    const createPictureFileObj = (data: string | string[] | Record | Record[]): any[] => {
+        const result = []
+        if (Array.isArray(data)) {
+            for (let i = 0; i < data.length; i++){
+                result.push(...createPictureFileObj(data[i]))
+            }
+        } else if(data) {
+            if (typeof data === 'string') {
+                result.push({
+                    url: data
+                })
+            } else if (isObject(data)) {
+                if (!data.url) {
+                    throw item.field + ' 图片或文件，默认值缺少url字段'
+                }
+                result.push(item)
+            }
         }
-        else if (model[item.field]) {
-            FormModel.value[item.field] = (model as { [key: string]: any })[item.field]
+        return result
+    }
+
+    const setDefaultValue = () => {
+        const model: any = isRef(FormOptions.model) ? FormOptions.model.value : FormOptions.model ?? {};
+
+        if (model[item.field]) {
+            FormModel.value[item.field] = model[item.field]
         }
         else if (isFunction(item.defaultValue)) {
             FormModel.value[item.field] = (item.defaultValue as Function)()
@@ -28,18 +46,15 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
         else if (isRef(item.defaultValue)) {
             FormModel.value[item.field] = (item.defaultValue as Ref).value
         }
-        else if (item.type === 'picture' || item.type === 'file') {
-            if (!item.defaultValue) {
-                FormModel.value[item.field] = []
-            } else if (Array.isArray(item.defaultValue)) {
-                FormModel.value[item.field] = item.defaultValue
-            } else {
-                FormModel.value[item.field] = [item.defaultValue]
-            }
-        }
         else {
             FormModel.value[item.field] = item.defaultValue || ''
         }
+
+        // 图片 or 文件
+        if (item.type === 'picture' || item.type === 'file') {
+            FormModel.value[item.field] = createPictureFileObj(FormModel.value[item.field])
+        }
+
     }
 
     // 默认表单模型变化，used变化

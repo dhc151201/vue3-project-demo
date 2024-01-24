@@ -95,11 +95,7 @@ const editConfig = ref<ModelFormOptions>({
 const handelEdit = (record: any) => {
   editConfig.value.model = {
     ...record,
-    src: record.src? [{
-      url: record.src,
-      name: 'image.png',
-      status: 'done',
-    }] : undefined
+    src: record.src
   }
 }
 </script>
