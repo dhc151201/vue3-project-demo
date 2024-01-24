@@ -1,9 +1,9 @@
 <template>
     <Laoding :loading="loading" noBg tip="">
-        <a-form :class="{
+        <a-form ref="RefForm" v-bind="prop" :model="model" :class="{
             'form-loading' : !Visable,
             'form-readonly' : prop.readonly
-        }" v-bind="prop" ref="RefForm" :model="model">
+        }">
             <template v-for="item of items">
                 <!-- {{ item  }} -->
                 <a-form-item v-bind="item.options">

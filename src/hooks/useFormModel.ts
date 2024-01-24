@@ -96,6 +96,9 @@ const handelValidator = (item: FormItem) => {
         required: item.required,
         validator: (rule: any, value: any, callback: any) => {
             if (item.required && ['', undefined, null].includes(value)) {
+                if (['select', 'radio', 'checkbox', 'date', 'date-range', 'picture', 'file'].includes(item.type)) {
+                    return Promise.reject('请选择' + item.label)
+                }
                 return Promise.reject('请输入' + item.label)
             }
             if (value) {
@@ -145,6 +148,7 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
     const inputOptions = {
         placeholder: FormOptions.readonly ? '' : "请输入",
         readonly: FormOptions.readonly,
+        name: item.field,
     }
     if (item.type === 'select' || item.type === 'checkbox' || item.type === 'radio') {
         Object.assign(inputOptions, {
@@ -152,13 +156,11 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
             placeholder: FormOptions.readonly ? '' : "请选择",
             showArrow: !FormOptions.readonly,
             allowClear: !FormOptions.readonly,
-            name: item.field,
         })
     }
     if (item.type === 'picture' || item.type === 'file') {
         Object.assign(inputOptions, {
             action: '',
-            name: item.field,
             accept: item.type === 'picture' ? 'image/*' : '',
             beforeUpload: () => {
                 return false
