@@ -73,7 +73,7 @@
                 label: '提现金额',
                 field: 'ee'
             },
-      ])
+      ]) as any
   })
   const handelEdit = (record: any) => {
     viewConfig.value.model = record
