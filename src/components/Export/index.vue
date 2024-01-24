@@ -11,6 +11,10 @@ import useRequest from "@/hooks/useRequest";
 import { notice } from "@/hooks/useNotice";
 
 const props = defineProps({
+    api: {
+        type: String,
+        default: ''
+    },
     query: {
         type: Object,
         default: () => ({})
@@ -21,7 +25,7 @@ const props = defineProps({
     }
 })
 
-const { run, loading } = useRequest('', {
+const { run, loading } = useRequest(props.api, {
     manual: true,
     method: 'post',
     onSuccess: (res: any) => {
