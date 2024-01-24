@@ -88,7 +88,7 @@ export type FormItem = {
     type?: 'text' | 'number' | 'radio' | 'select' | 'date' | 'date-range' | 'textarea' | 'checkbox' | 'password' | 'picture' | 'file' | 'htmlTextarea' | 'switch', // 表单类型
     dic?: { label: string | Ref<string>, value: string | number | Ref<number> | Ref<string> }[],
     slot?: string, // 插槽名称
-    defaultValue?: string | Ref<string> | (() => string), // 默认值
+    defaultValue?: string | Ref<string> | ((model: Record) => any), // 默认值
     used?: boolean | Ref<boolean> | ((model: { [key: string]: any }) => boolean), // 是否使用
     isEmail?: boolean, // 是否是邮箱
     isInt?: boolean, // 是否是正整数

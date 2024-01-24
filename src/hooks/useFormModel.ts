@@ -59,7 +59,7 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
         }
         else {
             if (isFunction(item.defaultValue)) {
-                FormModel.value[item.field] = (item.defaultValue as Function)()
+                FormModel.value[item.field] = (item.defaultValue as Function)(FormModel.value)
             }
             else if (isRef(item.defaultValue)) {
                 FormModel.value[item.field] = (item.defaultValue as Ref).value
