@@ -166,11 +166,11 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions, FormMode
         Object.assign(inputOptions, {
             action: '',
             accept: item.type === 'picture' ? 'image/*' : '',
-            showUploadList: false,
             beforeUpload: () => {
-                return false
+                return Promise.reject('')
             }
         })
+        /*
         watch(() => FormModel.value[item.field], () => {
             if (!item.inputOptions) return;
             if (FormModel.value[item.field] && item.maxLength && FormModel.value[item.field].length >= item.maxLength) {
@@ -182,6 +182,7 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions, FormMode
             immediate: true,
             deep: true
         })
+        */
     }
     if (item.type === 'date' || item.type === 'date-range') {
         Object.assign(inputOptions, {

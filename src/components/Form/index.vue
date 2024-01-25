@@ -47,11 +47,14 @@
                                 v-model:file-list="model[item.field]"
                                 list-type="picture"
                                 @preview="handlePreview"
-                                :class="'file'"
+                                :class="{
+                                    'file': true,
+                                    'no-event': model[item.field] && item.maxLength && model[item.field].length >= item.maxLength
+                                }"
                                 v-bind="item.inputOptions"
                             >
                                 <div>
-                                    <a-button size="small" :disabled="item.inputOptions?.disabled">
+                                    <a-button size="small">
                                         选择文件
                                     </a-button>
                                     <span @click.stop v-if="item.maxLength" style="margin-left: 0.5rem;" class="upload-tip">最多上传{{item.maxLength}}个文件</span>    
@@ -207,5 +210,10 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     .upload-tip{
         color: @text-label-color;
         font-size: 0.8rem;
+    }
+    .no-event{
+        :deep(.ant-upload){
+            pointer-events: none;
+        }
     }
 </style>
