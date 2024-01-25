@@ -67,7 +67,9 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
                 FormModel.value[item.field] = (item.defaultValue as Ref).value
             }
             else {
-                FormModel.value[item.field] = item.defaultValue
+                if (!['select', 'radio', 'picture', 'file', 'date', 'date-range'].includes(item.type as string)) {
+                    FormModel.value[item.field] = item.defaultValue ?? ''
+                }
             }
         }
     }

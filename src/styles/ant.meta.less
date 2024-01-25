@@ -221,12 +221,7 @@
         margin-top: 1.5rem;
     }
 }
-.ant-form{
-    .ant-form-item .ant-form-item-label >label{
-        color: #666;
-    }
-}
-/*
+
 .ant-modal{
     .ant-modal-header,
     .ant-modal-content{
@@ -234,6 +229,9 @@
     }
     .ant-modal-title{
         color: @text-light-color
+    }
+    .ant-modal-content{
+        box-shadow: 0 0 0 1px #5c7ee5, 0 1px 2px 3px #1e46bd;
     }
 }
 
@@ -244,14 +242,36 @@
         color: @text-light-color
     }
 }
+.ant-select-selector,
+.ant-picker,
 .ant-input-number-input,
 .ant-input{
     background-color: @bg-blank !important;
     border-color: @border-color !important;
     color: @text-light-color !important;
-    &::placeholder{ 
+    &::placeholder,
+    input::placeholder,
+    .ant-select-selection-placeholder { 
         color: @text-label-color !important;
         opacity: 0.3; 
+    }
+    .ant-picker-suffix{
+        color: @text-label-color !important;
+        opacity: 0.3;
+    }
+}
+.ant-checkbox-wrapper,
+.ant-radio-wrapper{
+    color: @text-light-color !important;
+}
+.ant-select-dropdown{
+    background-color: #383845 !important;
+
+    .ant-select-item-option-content {
+        color: @text-label-color;
+    }
+    .ant-select-item-option-selected {
+        background-color: #09090b !important;
     }
 }
 .ant-input-number{
@@ -261,4 +281,3 @@
 .ant-upload{
     color: @text-light-color !important;
 }
-*/

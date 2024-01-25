@@ -5,6 +5,7 @@
         <a-button @click="refreshTable" type="primary">搜索</a-button>
         <BtnExport />
       </template>
+      {{ SearchModel }}
       <DcTable ref="refTable" :columns="columns" :query="query">
         <template #oper="{record}">
             <ModelFormBtn :config="tranConfig" size="small" ghost>转账成功</ModelFormBtn>

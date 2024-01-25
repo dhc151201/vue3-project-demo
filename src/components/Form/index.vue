@@ -8,7 +8,7 @@
                 <!-- {{ item  }} -->
                 <a-form-item v-bind="item.options">
                     <template v-if="prop.readonly">
-                        {{ model[item.field] ?? '--' }}
+                        {{ ['', undefined, null].includes(model[item.field]) ? '--' : model[item.field] }}
                     </template>
                     <template v-else-if="item.slot">
                         <slot :name="item.slot" :model="model" :option="item"></slot>
