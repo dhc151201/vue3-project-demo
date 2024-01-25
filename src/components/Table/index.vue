@@ -28,7 +28,7 @@
 <script lang="ts" setup>
 import useRequest from "@/hooks/useRequest"
 import type { Record } from "@/types"
-import { ref, watch } from "vue"
+import { ref, watch, onBeforeUnmount } from "vue"
 import dayjs from "dayjs"
 
 const TEST: any = {
@@ -62,7 +62,7 @@ const props = defineProps({
 
 const dataSource = ref<any[]>(TEST.data)
 const pagination = ref<{ page: number, limit: number, total: number }>({ page: 1, limit: 10, total: 0 })
-const { loading, run: getTableData } = useRequest(props.api, {
+const { loading, run: getTableData, cancel } = useRequest(props.api, {
     manual: true,
     debounceInterval: 300,
     defaultParams: () => Object.assign(pagination.value, props.query),
@@ -70,6 +70,9 @@ const { loading, run: getTableData } = useRequest(props.api, {
         dataSource.value = res.data ?? []
         pagination.value.total = res.total ?? 0
     }
+})
+onBeforeUnmount(() => {
+    cancel()
 })
 
 watch(() => props.query, () => {

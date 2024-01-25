@@ -38,7 +38,7 @@ const columns: TableColumns = [
     { title: "是否发货", dataIndex: 'up_time', },
     { title: "物流单号", dataIndex: 'up_time', },
     { title: "物流公司", dataIndex: 'up_time', },
-    { title: "操作", slot: 'oper', width: 60, align: 'center' },
+    { title: "操作", slot: 'oper', width: 140, align: 'center' },
 ]
 </script>
 <style lang="less" scoped>
