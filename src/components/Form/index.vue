@@ -51,8 +51,8 @@
                                 v-bind="item.inputOptions"
                             >
                                 <div v-if="!model[item.field] || !item.maxLength || model[item.field].length < item.maxLength">
-                                    <a-button>
-                                        <upload-outlined></upload-outlined>
+                                    <a-button size="small">
+                                        <!-- <upload-outlined></upload-outlined> -->
                                         选择文件
                                     </a-button>
                                     <span @click.stop v-if="item.maxLength" style="margin-left: 0.5rem;" class="upload-tip">最多上传{{item.maxLength}}个文件</span>    
