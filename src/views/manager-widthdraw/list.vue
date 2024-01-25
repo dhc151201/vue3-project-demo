@@ -1,12 +1,7 @@
 <template>
     <a-card title="提现管理" size="small" :bordered="false">
       <template #extra>
-        <a-input v-model:value="query.keyword" placeholder="会员账号" />
-        <a-input v-model:value="query.keyword" placeholder="会员手机号" />
-        <a-input v-model:value="query.keyword" placeholder="推广员账号" />
-        <a-date-picker v-model:value="query.keyword" placeholder="提现申请时间" class="date" />
-        <a-input v-model:value="query.keyword" placeholder="提现订单号" />
-        <a-select v-model:value="query.keyword" :options="statusOptions" placeholder="提现状态" class="date" />
+        <Form :config="SearchStateConfig" v-model:form-state="SearchModel"></Form>
         <a-button @click="refreshTable" type="primary">搜索</a-button>
         <BtnExport />
       </template>
@@ -20,16 +15,31 @@
   </template>
   <script setup lang="ts">
   import { ref } from "vue";
-  import type { TableColumns, ModelFormOptions } from "@/types/index"
+  import Form from "@/components/Form/index.vue"
+  import type { TableColumns, ModelFormOptions, FormOptions } from "@/types/index"
 
+  const SearchModel = ref({name: 1})
   const statusOptions = [
         { label: "待审核", value: 0 }, 
         { label: "审核拒绝", value: 1 }, 
         { label: "待审通过", value: 2 }, 
   ]
-  const query = ref<{keyword?: string}>({keyword: undefined})
+  const SearchStateConfig = ref<FormOptions>({
+    options: { layout: 'inline' },
+    items: [
+      { field: "user", inputOptions: { placeholder: "会员账号" } },
+      { field: "phone", inputOptions: { placeholder: "会员手机号" } },
+      { field: "account", inputOptions: { placeholder: "推广员账号" },  },
+      { field: "date", inputOptions: { placeholder: "提现申请时间" }, type: 'date' },
+      { field: "order", inputOptions: { placeholder: "提现订单号" } },
+      { field: "status", inputOptions: { placeholder: "提现状态" }, type: "select", dic: statusOptions },
+    ]
+  })
+ 
+  const query = ref({})
   const refTable = ref()
   const refreshTable = () => {
+      query.value = { ...SearchModel.value }
     refTable.value?.refresh({page: 1})
   }
   const columns: TableColumns = [

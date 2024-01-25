@@ -81,8 +81,9 @@ export type FormOptions = {
         [key: string]: any
     }
 }
+export type WatchField = string | (string | string[])[];
 export type FormItem = {
-    label: string | Ref<string> | (() => string),
+    label?: string | Ref<string> | (() => string),
     field: string,
     required?: boolean,
     type?: 'text' | 'number' | 'radio' | 'select' | 'date' | 'date-range' | 'textarea' | 'checkbox' | 'password' | 'picture' | 'file' | 'htmlTextarea' | 'switch', // 表单类型
@@ -97,6 +98,13 @@ export type FormItem = {
     minValue?: number, // 最小值
     maxValue?: number, // 最大值
     maxLength?: number, // 最大长度，type为picture、file时，限制的是媒体个数
+    // 联动配置，若配置字段值变化时，将自动发起远程api获取数据，或回调处理
+    watchField?: WatchField,
+    watchFieldImmediate?: boolean, // 是否立即启动字段联动
+    watchFieldApi?: string | Ref<string>, // 联动请求地址
+    watchFieldData?: Record | ((values: any, watchField: string | (string | string[])[], model: Record) => Record), // 联动额外的api请求数据
+    watchFieldCallback?: (values: any, inputOptions: Record, model: Ref<Record>) => void, // 联动处理函数，返回值将作为输入项的
+    watchFieldCustomResponse?: (data: Record, inputOptions: Record, model: Ref<Record>) => void // 自定义处理联动api请求结果
     // 将会直接绑定传递给【表单项组件】
     options?: { 
         [key: string]: any

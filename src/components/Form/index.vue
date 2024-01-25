@@ -76,7 +76,7 @@
     </a-modal>
 </template>
 <script setup lang="ts">
-import { ref, onBeforeMount, computed } from "vue";
+import { ref, onBeforeMount, computed, watch } from "vue";
 import { useForm } from "@/hooks/useFormModel";
 import Laoding from "@/components/Loading/index.vue"
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons-vue';
@@ -85,18 +85,19 @@ import Editor from "@/components/Editor/index.vue"
 import useRequest from "@/hooks/useRequest";
 
 const props = defineProps({
-    config: {
-        type: Object,
-        default: () => ({})
-    }
+    config: { type: Object, default: () => ({}) },
+    formState: { type: Object, default: () => ({}) },
 })
-const emits = defineEmits(['submit-success'])
+const emits = defineEmits(['submit-success', 'update:formState'])
 
 const {
     FormProps: prop,
     FormItems: items,
     FormState: model
 } = useForm(props.config, props.config.items as any)
+watch(model, () => {
+    emits('update:formState', model.value)
+}, { immediate: true, deep: true })
 
 const Visable = ref(false)
 const loading = computed(() => !Visable.value || props.config.loading)

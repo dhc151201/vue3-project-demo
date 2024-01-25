@@ -1,15 +1,17 @@
 /***
  * 表单模型
  */
-import { isEmailStr, isFunction, isObject } from "@/utils"
+import { debounce, isArray, isEmailStr, isFunction, isObject, isString } from "@/utils"
 import {isRef, ref, watch, computed} from "vue"
 import type { Ref } from "vue"
-import type { ModelFormOptions,FormItem, FormOptions, Record } from "@/types"
+import type { ModelFormOptions,FormItem, FormOptions, Record, WatchField } from "@/types"
 import dayjs from "dayjs"
+import useRequest from "./useRequest"
 
 /**
  * 默认值处理
  * @param item useFormModel表单配置项
+ * @param FormOptions FormOptions配置
  * @param FormModel 表单数据
  */
 const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<Record>) => {
@@ -132,11 +134,11 @@ const handelValidator = (item: FormItem) => {
  * @param FormOptions FormOptions配置
  */
 const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
-    item.options = Object.assign(item.options || {}, {
+    item.options = ref(Object.assign({
         label: item.label,
         name: item.field,
         required: FormOptions.readonly ? false : item.required,
-    })
+    }, item.options || {}))
 }
 
 /**
@@ -177,7 +179,91 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
         })
     }
 
-    item.inputOptions = Object.assign(item.inputOptions || {}, inputOptions)
+    item.inputOptions = ref(Object.assign(inputOptions, item.inputOptions || {}))
+}
+
+/**
+ * 表单项，处理联动
+ * @param item useFormModel表单配置项
+ * @param FormOptions FormOptions配置
+ * @param FormModel 表单数据
+ */
+const handelFormWatchField = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<Record>) => {
+    if (!item.watchField) return;
+
+    const { run: getRemoteData, cancel: cancelGetRemoteData } = useRequest(item.watchFieldApi ?? '', {
+        manual: true,
+        onFinally: () => {
+            if (item.inputOptions) {
+                item.inputOptions.loading = false
+                item.inputOptions.disabled = false
+            }
+        },
+    })
+
+    const handelWatchField = debounce((values: Record) => {
+        if (item.type && ['select', 'radio', 'checkbox'].includes(item.type)) {
+            // 远程数据
+            if (item.watchFieldApi && item.inputOptions) {
+                // todo实现远程数据拉取, 合并预设请求数据watchFieldData
+                let Params: Record = {}
+                if (isFunction(item.watchFieldData)) {
+                    Params = (item.watchFieldData as Function)(values, item.watchField, FormModel.value)
+                } else if (isObject(item.watchFieldData)) {
+                    Params = item.watchFieldData ?? {}
+                }
+                cancelGetRemoteData()
+                const res = getRemoteData({ ...Params, ...values })
+                // 数据自定义组装
+                if (isFunction(item.watchFieldCustomResponse)) {
+                    (item.watchFieldCustomResponse as Function)(res, item.inputOptions, FormModel)
+                } else {
+                    // 公共处理 todo
+                }
+            }
+        }
+
+        if(isFunction(item.watchFieldCallback)) {
+            (item.watchFieldCallback as Function)(values, item.inputOptions, FormModel)
+        }
+    }, 300)
+
+    watch(() => {
+        const getResult = (watchField: WatchField) => {
+            const result: Record = {}
+            try {
+                if (isString(watchField)) result[watchField as string] = FormModel.value[watchField as string]
+                else if (isArray(watchField)) {
+                    for (const key of watchField) {
+                        if (isArray(key)) {
+                            let _result = FormModel.value;
+                            const InnerKey: string = key[-1]
+                            for (const _Key of key) { 
+                                _result = _result[_Key]
+                            }
+                            result[InnerKey] = _result
+                        } else if (isString(key)) {
+                            result[key as string] = FormModel.value[key as string]
+                        }
+                    }
+                }
+            } catch (e) { 
+                console.warn(e)
+            }
+            return result
+        }
+        return getResult(item.watchField as WatchField)
+    }, (values: Record) => { 
+        handelWatchField(values)
+        if (item.inputOptions) {
+            item.inputOptions.loading = true
+            item.inputOptions.disabled = true
+            item.inputOptions.options = []
+        }
+    }, {
+        immediate: item.watchFieldImmediate,
+        deep: true
+    })
 }
 
 // 表单
@@ -185,7 +271,10 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
 
     const FormState = ref<{ [key: string]: any }>({})
     const FormProps = computed(() => {
-        return Object.assign((isRef(FormOptions.options) ? FormOptions.options.value : FormOptions.options) ?? {}, { readonly: FormOptions.readonly })
+        return Object.assign(
+            (isRef(FormOptions.options) ? FormOptions.options.value : FormOptions.options) ?? {},
+            { readonly: FormOptions.readonly }
+        )
     })
 
     FormItems?.forEach((item: FormItem) => {
@@ -193,13 +282,10 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
         handeFormItemProps(item, FormOptions)
         handelValidator(item)
         handelFormInputProps(item, FormOptions)
+        handelFormWatchField(item, FormOptions, FormState)
     })
 
-    const showForm = ref<boolean>(false)
-    const tiggleForm = (visable: boolean) => showForm.value = visable
-
     return {
-        showForm,
         FormProps,
         FormItems: computed(() => FormItems?.filter((item: FormItem) => {
             if (isRef(item.used)) return (item.used as Ref).value;
@@ -208,7 +294,6 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
             return true;
         })) || [],
         FormState,
-        tiggleForm
     }
 }
 
