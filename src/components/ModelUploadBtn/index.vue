@@ -1,7 +1,7 @@
 <template>
     <slot name="btn">
         <a-button type="primary" @click="open = true" v-bind="$attrs">
-            <slot></slot>
+            <slot>上传</slot>
         </a-button>
     </slot>
     <ModelForm :config="config" v-model:open="open"></ModelForm>
