@@ -100,8 +100,8 @@ const handelValidator = (item: FormItem) => {
         required: item.required,
         validator: (rule: any, value: any, callback: any) => {
             if (item.required && ['', undefined, null].includes(value)) {
-                if (['select', 'radio', 'checkbox', 'date', 'date-range', 'picture', 'file'].includes(item.type)) {
-                    return Promise.reject('请选择' + item.label)
+                if (['select', 'radio', 'checkbox', 'date', 'date-range', 'picture', 'file'].includes(item.type as string)) {
+                    return Promise.reject('请选择' + (item.label || {picture: "图片", file: "文件"}[item.type as string]))
                 }
                 return Promise.reject('请输入' + item.label)
             }
