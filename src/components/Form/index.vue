@@ -50,13 +50,14 @@
                                 :class="'file'"
                                 v-bind="item.inputOptions"
                             >
-                                <div v-if="!model[item.field] || !item.maxLength || model[item.field].length < item.maxLength">
-                                    <a-button size="small">
+                                <div>
+                                    <a-button size="small" :disabled="item.inputOptions?.disabled">
                                         <!-- <upload-outlined></upload-outlined> -->
                                         选择文件
                                     </a-button>
                                     <span @click.stop v-if="item.maxLength" style="margin-left: 0.5rem;" class="upload-tip">最多上传{{item.maxLength}}个文件</span>    
                                 </div>
+                                <template #removeIcon>22</template>
                             </a-upload>
                         </template>
                         <!-- 富文本编辑 -->

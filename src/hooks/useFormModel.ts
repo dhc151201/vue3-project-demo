@@ -148,7 +148,7 @@ const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
  * @param item useFormModel表单配置项
  * @param FormOptions FormOptions配置
  */
-const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
+const handelFormInputProps = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<Record>) => {
     const inputOptions = {
         placeholder: FormOptions.readonly ? '' : "请输入",
         readonly: FormOptions.readonly,
@@ -166,9 +166,21 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
         Object.assign(inputOptions, {
             action: '',
             accept: item.type === 'picture' ? 'image/*' : '',
+            showUploadList: false,
             beforeUpload: () => {
                 return false
             }
+        })
+        watch(() => FormModel.value[item.field], () => {
+            if (!item.inputOptions) return;
+            if (FormModel.value[item.field] && item.maxLength && FormModel.value[item.field].length >= item.maxLength) {
+                item.inputOptions.disabled = true
+            } else {
+                item.inputOptions.disabled = false
+            }
+        }, {
+            immediate: true,
+            deep: true
         })
     }
     if (item.type === 'date' || item.type === 'date-range') {
@@ -283,7 +295,7 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
         handelDefaultValue(item, FormOptions, FormState)
         handeFormItemProps(item, FormOptions)
         handelValidator(item)
-        handelFormInputProps(item, FormOptions)
+        handelFormInputProps(item, FormOptions, FormState)
         handelFormWatchField(item, FormOptions, FormState)
     })
 

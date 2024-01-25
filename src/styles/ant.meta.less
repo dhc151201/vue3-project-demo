@@ -36,6 +36,12 @@
             }
         }
     }
+    &.ant-btn-default{
+        &[disabled]{
+            color: @text-light-color;
+            opacity: 0.8;
+        }
+    }
 }
 
 // 卡片
@@ -227,8 +233,12 @@
     .ant-modal-content{
         background-color: @bg-blank-light;
     }
+    .anticon,
     .ant-modal-title{
         color: @text-light-color
+    }
+    .anticon:hover{
+        color: @color-primary;
     }
     .ant-modal-content{
         box-shadow: 0 0 0 1px #5c7ee5, 0 1px 2px 3px #1e46bd;
@@ -283,5 +293,30 @@
     background-color: #383845 !important;
     .ant-select-item-option-selected {
         background-color: #09090b !important;
+    }
+}
+.ant-upload-list.ant-upload-list-picture-card{
+    .ant-upload-list-item{
+        border-color: @border-color !important;
+    }
+}
+.ant-upload-list:not(.ant-upload-list-picture-card){
+    .ant-upload-list-item{
+        background-color: @bg-blank;
+        border-color: transparent !important;
+        &:hover{
+            background-color: @bg-blank !important;
+        }
+        .ant-upload-list-item-name,
+        .ant-upload-list-item-actions .anticon{
+            color: @text-label-color !important;
+            &:hover{
+                cursor: pointer;
+                color: @color-primary !important;
+            }
+        }
+    }
+    .ant-tooltip{
+        display: none;
     }
 }

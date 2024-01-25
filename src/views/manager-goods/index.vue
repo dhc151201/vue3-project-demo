@@ -7,6 +7,7 @@
         enter-button
         @search="refreshTable"
       />
+      <ModelUploadBtn>导入</ModelUploadBtn>
       <ModelFormBtn :config="addConfig">新增</ModelFormBtn>
       <BtnExport />
     </template>

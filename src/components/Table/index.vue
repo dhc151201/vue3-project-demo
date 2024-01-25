@@ -40,7 +40,7 @@ const TEST: any = {
     ],
     data: [
         { name: '张三丰', age: 72, sex: 1, date: 1705990341821 },
-        { name: '张三丰', age: 72, sex: 1, src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png' },
+        { name: '张三丰', age: 72, sex: 1, src: ['https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png', 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'] },
         { name: '张三丰', age: 72, sex: 0 },
     ]
 }
