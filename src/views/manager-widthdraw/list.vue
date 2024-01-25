@@ -5,7 +5,6 @@
         <a-button @click="refreshTable" type="primary">搜索</a-button>
         <BtnExport />
       </template>
-      {{ SearchModel }}
       <DcTable ref="refTable" :columns="columns" :query="query">
         <template #oper="{record}">
             <ModelFormBtn :config="tranConfig" size="small" ghost>转账成功</ModelFormBtn>
@@ -33,7 +32,7 @@
       { field: "account", inputOptions: { placeholder: "推广员账号" },  },
       { field: "date", inputOptions: { placeholder: "提现申请时间" }, type: 'date' },
       { field: "order", inputOptions: { placeholder: "提现订单号" } },
-      { field: "status", inputOptions: { placeholder: "提现状态" }, type: "select", dic: statusOptions },
+      { field: "status", inputOptions: { placeholder: "提现状态", style: {width: '140px'} }, type: "select", dic: statusOptions },
     ]
   })
  
