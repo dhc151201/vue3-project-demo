@@ -1,10 +1,12 @@
 <template>
     <header>
         <Timezone></Timezone>
+        <LangSwitch></LangSwitch>
         <LogoutOutlined class="login-out" @click="loginOut()" />
     </header>
 </template>
 <script setup lang="ts">
+import LangSwitch from "@/components/Lang/index.vue"
 import Timezone from "@/components/TimeZone/index.vue"
 import { LogoutOutlined } from '@ant-design/icons-vue';
 
@@ -19,7 +21,7 @@ header{
     justify-content: end;
     align-items: center;
     padding-right: 1.5rem;
-    &>*+*{
+    & > *{
         margin-left: 1rem;
     }
 }

@@ -36,6 +36,7 @@ declare module 'vue' {
     Editor: typeof import('./src/components/Editor/index.vue')['default']
     Export: typeof import('./src/components/Export/index.vue')['default']
     Form: typeof import('./src/components/Form/index.vue')['default']
+    Lang: typeof import('./src/components/Lang/index.vue')['default']
     Layout: typeof import('./src/components/Layout/index.vue')['default']
     Loading: typeof import('./src/components/Loading/index.vue')['default']
     ModelForm: typeof import('./src/components/ModelForm/index.vue')['default']

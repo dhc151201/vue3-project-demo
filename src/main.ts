@@ -2,6 +2,7 @@ import "@/styles/global.less"
 import "@/styles/ant.meta.less"
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import i18n from '@/i18n'
 import App from './App.vue'
 import router from './router'
 import DirectiveTrim from "@/directives/trim"
@@ -16,6 +17,7 @@ import DcSelect from "@/components/Select/index.vue"
 const app = createApp(App)
 app.use(createPinia())
 app.use(router)
+app.use(i18n)
 DirectiveTrim(app)
 DirectiveStopAutocomplete(app)
 app.component('ModelTableBtn', ModelTableBtn)

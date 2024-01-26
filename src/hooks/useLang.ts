@@ -1,6 +1,6 @@
 import { computed, type Ref } from "vue"
 import { getCookie, setCookie } from "./useCookie"
-import { useI18n } from "vue-i18n"
+import i18n from "@/i18n"
 
 const langKey = "lang"
 type lang = 'zh' | 'en'
@@ -29,8 +29,7 @@ export const setLocalLang = (value: 'zh' | 'en') => {
     document.body.classList.add(value)
 }
 
-const { locale } = useI18n();
 /**
  * 计算属性，是否是中文
  */
-export const isZh:Ref<boolean> = computed(() => locale.value === 'zh')
+export const isZh:Ref<boolean> = computed(() => i18n.global.locale.value === 'zh')
