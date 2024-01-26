@@ -190,6 +190,7 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     :deep(.ant-form){
         transition: all 300ms;
         .ant-input-number,
+        .dc-darpdown-box,
         .ant-select,
         .ant-picker
         {

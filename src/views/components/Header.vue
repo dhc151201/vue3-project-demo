@@ -21,7 +21,7 @@ header{
     justify-content: end;
     align-items: center;
     padding-right: 1.5rem;
-    & > *{
+    & > *:not(:first-child){
         margin-left: 1rem;
     }
 }
