@@ -1,5 +1,6 @@
 <template>
     <Laoding :loading="loading" noBg tip="">
+        {{ model }}
         <a-form ref="RefForm" v-bind="prop" :model="model" :class="{
             'form-loading' : !Visable,
             'form-readonly' : prop.readonly

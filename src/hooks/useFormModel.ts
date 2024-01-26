@@ -38,7 +38,7 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
     }
 
     const setDefaultValue = () => {
-        // used 为false，不赋予初始值
+        // used 为false，不赋予初始值，如果需要赋予初始值，不显示在表单中，请配置hide: true
         if (
             item.used === false ||
             (isRef(item.used) && item.used?.value === false) ||
@@ -65,7 +65,7 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
             FormModel.value[item.field] = createPictureFileObj(VALUE)
         }
         else if (item.type === 'date') {
-            FormModel.value[item.field] = dayjs(VALUE)
+            FormModel.value[item.field] = VALUE ? dayjs(VALUE) : ''
         }
         else if (item.type === 'date-range') {
             if (Array.isArray(VALUE)) {
