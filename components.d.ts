@@ -42,8 +42,12 @@ declare module 'vue' {
     ModelFormBtn: typeof import('./src/components/ModelFormBtn/index.vue')['default']
     ModelTable: typeof import('./src/components/ModelTable/index.vue')['default']
     ModelTableBtn: typeof import('./src/components/ModelTableBtn/index.vue')['default']
+    ModelUpload: typeof import('./src/components/ModelUpload/index.vue')['default']
+    ModelUploadBtn: typeof import('./src/components/ModelUploadBtn/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Select: typeof import('./src/components/Select/index.vue')['default']
     Table: typeof import('./src/components/Table/index.vue')['default']
+    TimeZone: typeof import('./src/components/TimeZone/index.vue')['default']
   }
 }

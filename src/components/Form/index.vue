@@ -1,5 +1,6 @@
 <template>
     <Laoding :loading="loading" noBg tip="">
+        <!-- {{ model }} -->
         <a-form ref="RefForm" v-bind="prop" :model="model" :class="{
             'form-loading' : !Visable,
             'form-readonly' : prop.readonly
@@ -24,7 +25,7 @@
                         <a-range-picker v-else-if="item.type == 'date-range'" v-model:value="model[item.field]" v-bind="item.inputOptions" v-trim/>
                         <a-checkbox-group v-else-if="item.type == 'checkbox'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
                         <a-radio-group v-else-if="item.type == 'radio'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
-                        <a-select v-else-if="item.type == 'select'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
+                        <dc-select v-else-if="item.type == 'select'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
                         <a-switch v-else-if="item.type == 'switch'" v-model:checked="model[item.field]" v-bind="item.inputOptions"/>
                         <!-- 图片上传 -->
                         <template v-else-if="item.type == 'picture'">
@@ -47,12 +48,14 @@
                                 v-model:file-list="model[item.field]"
                                 list-type="picture"
                                 @preview="handlePreview"
-                                :class="'file'"
+                                :class="{
+                                    'file': true,
+                                    'no-event': model[item.field] && item.maxLength && model[item.field].length >= item.maxLength
+                                }"
                                 v-bind="item.inputOptions"
                             >
-                                <div v-if="!model[item.field] || !item.maxLength || model[item.field].length < item.maxLength">
-                                    <a-button>
-                                        <upload-outlined></upload-outlined>
+                                <div>
+                                    <a-button size="small">
                                         选择文件
                                     </a-button>
                                     <span @click.stop v-if="item.maxLength" style="margin-left: 0.5rem;" class="upload-tip">最多上传{{item.maxLength}}个文件</span>    
@@ -208,5 +211,10 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     .upload-tip{
         color: @text-label-color;
         font-size: 0.8rem;
+    }
+    .no-event{
+        :deep(.ant-upload){
+            pointer-events: none;
+        }
     }
 </style>

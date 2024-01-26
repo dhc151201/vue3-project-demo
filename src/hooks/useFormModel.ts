@@ -38,39 +38,50 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
     }
 
     const setDefaultValue = () => {
-        const model: any = isRef(FormOptions.model) ? FormOptions.model.value : FormOptions.model ?? {};
-        const modelFieldValue = model[item.field]
+        // used 为false，不赋予初始值，如果需要赋予初始值，不显示在表单中，请配置hide: true
+        if (
+            item.used === false ||
+            (isRef(item.used) && item.used?.value === false) ||
+            (isFunction(item.used) && (item.used as Function)(FormModel.value) === false)
+        ) {
+            FormModel.value[item.field] = undefined
+            return;
+        }
 
-        if (modelFieldValue) {
-            if (item.type === 'picture' || item.type === 'file') {
-                FormModel.value[item.field] = createPictureFileObj(modelFieldValue)
-            }
-            else if (item.type === 'date') {
-                FormModel.value[item.field] = dayjs(modelFieldValue)
-            }
-            else if (item.type === 'date-range') {
-                if (Array.isArray(modelFieldValue)) {
-                    FormModel.value[item.field] = [
-                        modelFieldValue[0] ? dayjs(modelFieldValue[0]) : undefined,
-                        modelFieldValue[1] ? dayjs(modelFieldValue[1]) : undefined
-                    ]
-                }
+        const model: any = (isRef(FormOptions.model) ? FormOptions.model.value : FormOptions.model) ?? {};
+        // 配置的默认值
+        let defaultValue = undefined;
+        if (isRef(item.defaultValue)) {
+            defaultValue = item.defaultValue.value
+        } else if (isFunction(item.defaultValue)) {
+            defaultValue = (item.defaultValue as Function)(FormModel.value)
+        } else {
+            defaultValue = item.defaultValue
+        }
+
+        const VALUE = model[item.field] ?? defaultValue;
+
+        if (item.type === 'picture' || item.type === 'file') {
+            FormModel.value[item.field] = createPictureFileObj(VALUE)
+        }
+        else if (item.type === 'date') {
+            FormModel.value[item.field] = VALUE ? dayjs(VALUE) : ''
+        }
+        else if (item.type === 'date-range') {
+            if (Array.isArray(VALUE)) {
+                FormModel.value[item.field] = [
+                    VALUE[0] ? dayjs(VALUE[0]) : undefined,
+                    VALUE[1] ? dayjs(VALUE[1]) : undefined
+                ]
             } else {
-                FormModel.value[item.field] = modelFieldValue
+                FormModel.value[item.field] = []
             }
         }
+        else if (!['select', 'radio'].includes(item.type as string)) {
+            FormModel.value[item.field] = VALUE ?? ''
+        }
         else {
-            if (isFunction(item.defaultValue)) {
-                FormModel.value[item.field] = (item.defaultValue as Function)(FormModel.value)
-            }
-            else if (isRef(item.defaultValue)) {
-                FormModel.value[item.field] = (item.defaultValue as Ref).value
-            }
-            else {
-                if (!['select', 'radio', 'picture', 'file', 'date', 'date-range'].includes(item.type as string)) {
-                    FormModel.value[item.field] = item.defaultValue ?? ''
-                }
-            }
+            FormModel.value[item.field] = VALUE
         }
     }
 
@@ -100,8 +111,8 @@ const handelValidator = (item: FormItem) => {
         required: item.required,
         validator: (rule: any, value: any, callback: any) => {
             if (item.required && ['', undefined, null].includes(value)) {
-                if (['select', 'radio', 'checkbox', 'date', 'date-range', 'picture', 'file'].includes(item.type)) {
-                    return Promise.reject('请选择' + item.label)
+                if (['select', 'radio', 'checkbox', 'date', 'date-range', 'picture', 'file'].includes(item.type as string)) {
+                    return Promise.reject('请选择' + (item.label || {picture: "图片", file: "文件"}[item.type as string]))
                 }
                 return Promise.reject('请输入' + item.label)
             }
@@ -148,7 +159,7 @@ const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
  * @param item useFormModel表单配置项
  * @param FormOptions FormOptions配置
  */
-const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
+const handelFormInputProps = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<Record>) => {
     const inputOptions = {
         placeholder: FormOptions.readonly ? '' : "请输入",
         readonly: FormOptions.readonly,
@@ -167,9 +178,22 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions) => {
             action: '',
             accept: item.type === 'picture' ? 'image/*' : '',
             beforeUpload: () => {
-                return false
+                return Promise.reject('')
             }
         })
+        /*
+        watch(() => FormModel.value[item.field], () => {
+            if (!item.inputOptions) return;
+            if (FormModel.value[item.field] && item.maxLength && FormModel.value[item.field].length >= item.maxLength) {
+                item.inputOptions.disabled = true
+            } else {
+                item.inputOptions.disabled = false
+            }
+        }, {
+            immediate: true,
+            deep: true
+        })
+        */
     }
     if (item.type === 'date' || item.type === 'date-range') {
         Object.assign(inputOptions, {
@@ -283,16 +307,21 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
         handelDefaultValue(item, FormOptions, FormState)
         handeFormItemProps(item, FormOptions)
         handelValidator(item)
-        handelFormInputProps(item, FormOptions)
+        handelFormInputProps(item, FormOptions, FormState)
         handelFormWatchField(item, FormOptions, FormState)
     })
 
     return {
         FormProps,
         FormItems: computed(() => FormItems?.filter((item: FormItem) => {
+            // 不使用
             if (isRef(item.used)) return (item.used as Ref).value;
             if (isFunction(item.used)) return (item.used as Function)(FormState.value)
             if (typeof item.used === 'boolean') return item.used
+            // 隐藏
+            if (isRef(item.hide)) return !(item.hide as Ref).value;
+            if (isFunction(item.hide)) return !(item.hide as Function)(FormState.value)
+            if (typeof item.hide === 'boolean') return !item.hide
             return true;
         })) || [],
         FormState,

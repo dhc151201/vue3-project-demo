@@ -7,6 +7,7 @@
         enter-button
         @search="refreshTable"
       />
+      <ModelUploadBtn />
       <ModelFormBtn :config="addConfig">新增</ModelFormBtn>
       <BtnExport />
     </template>
@@ -45,7 +46,12 @@ const addConfig = ref<ModelFormOptions>({
     // onSubmit: (values) => {
     //   debugger
     // },
-    items: [
+  items: [
+      {
+        label: "id",
+        field: 'id',
+        hide: true
+      },
       {
         label: "商品名称",
         field: 'name'
@@ -104,11 +110,12 @@ const addConfig = ref<ModelFormOptions>({
           { label: "性别", value: 2 }, 
         ]
       },
-      // {
-      //   label: "商品详情",
-      //   field: 'context',
-      //   type: "htmlTextarea",
-      // },
+      {
+        label: "商品详情",
+        field: 'context',
+        type: "htmlTextarea",
+        used: false
+      },
     ]
 })
 const editConfig = ref<ModelFormOptions>({

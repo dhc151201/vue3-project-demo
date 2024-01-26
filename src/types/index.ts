@@ -91,6 +91,7 @@ export type FormItem = {
     slot?: string, // 插槽名称
     defaultValue?: string | Ref<string> | number | Ref<number> | ((model: Record) => any), // 默认值
     used?: boolean | Ref<boolean> | ((model: { [key: string]: any }) => boolean), // 是否使用
+    hide?: boolean | Ref<boolean> |  ((model: { [key: string]: any }) => boolean), // 是否隐藏
     isEmail?: boolean, // 是否是邮箱
     isInt?: boolean, // 是否是正整数
     isNoChinese?: boolean, // 是否不含中文字符
