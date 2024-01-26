@@ -30,7 +30,7 @@ export default function (content: string | null | VNode, options?: options) {
             cancelText: "取消",
             cancelButtonProps: {
                 style: options?.toast ? 'display: none' : ''
-            },
+            } as any,
             onOk: async () => {
                 if (options?.onOkBefore) {
                     await options.onOkBefore()
