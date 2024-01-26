@@ -25,7 +25,7 @@
                         <a-range-picker v-else-if="item.type == 'date-range'" v-model:value="model[item.field]" v-bind="item.inputOptions" v-trim/>
                         <a-checkbox-group v-else-if="item.type == 'checkbox'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
                         <a-radio-group v-else-if="item.type == 'radio'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
-                        <a-select v-else-if="item.type == 'select'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
+                        <dc-select v-else-if="item.type == 'select'" v-model:value="model[item.field]" v-bind="item.inputOptions"/>
                         <a-switch v-else-if="item.type == 'switch'" v-model:checked="model[item.field]" v-bind="item.inputOptions"/>
                         <!-- 图片上传 -->
                         <template v-else-if="item.type == 'picture'">
