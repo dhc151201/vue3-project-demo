@@ -1,7 +1,6 @@
 <template>
   <a-card title="推广员列表" size="small" :bordered="false">
     <template #extra>
-      <ModelFormBtn :config="addConfig">新增</ModelFormBtn>
       <BtnExport />
     </template>
     <DcTable :columns="columns">
