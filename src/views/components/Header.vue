@@ -1,9 +1,11 @@
 <template>
     <header>
+        <Timezone></Timezone>
         <LogoutOutlined class="login-out" @click="loginOut()" />
     </header>
 </template>
 <script setup lang="ts">
+import Timezone from "@/components/TimeZone/index.vue"
 import { LogoutOutlined } from '@ant-design/icons-vue';
 
 const loginOut = () => {}
@@ -17,6 +19,9 @@ header{
     justify-content: end;
     align-items: center;
     padding-right: 1.5rem;
+    &>*+*{
+        margin-left: 1rem;
+    }
 }
 .login-out{
     color: #fff;
