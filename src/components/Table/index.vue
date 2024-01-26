@@ -1,5 +1,5 @@
 <template>
-    <a-table :loading="loading" :data-source="dataSource" :columns="columns || TEST.columns" v-bind="$attrs">
+    <a-table :loading="loading" :data-source="dataList" :columns="TEST.columns" v-bind="$attrs">
         <template #bodyCell="{ text, column, record }">
             <!-- 空值 -->
             <template v-if="[undefined, null, ''].includes(text)">--</template>
@@ -23,7 +23,11 @@
                 {{ text }}
             </template>
         </template>
+        <template v-for="(_value, name) in $slots" #[name]="slotData">
+            <slot :name="name" v-bind="slotData || {}" />
+        </template>
     </a-table>
+    <slot name="footer" :source="dataSource"></slot>
 </template>
 <script lang="ts" setup>
 import useRequest from "@/hooks/useRequest"
@@ -54,35 +58,31 @@ const props = defineProps({
         type: Object,
         default: () => ({})
     },
-    columns: {
-        type: Array,
-        default: () => undefined
-    },
 })
 
-const dataSource = ref<any[]>(TEST.data)
+const dataSource = ref<any>({})
+const dataList = ref<any[]>(TEST.data)
 const pagination = ref<{ page: number, limit: number, total: number }>({ page: 1, limit: 10, total: 0 })
 const { loading, run: getTableData, cancel } = useRequest(props.api, {
     manual: true,
     debounceInterval: 300,
     defaultParams: () => Object.assign(pagination.value, props.query),
     onSuccess: (res: any) => {
-        dataSource.value = res.data ?? []
+        dataSource.value = res;
+        dataList.value = res.data ?? []
         pagination.value.total = res.total ?? 0
     }
 })
-onBeforeUnmount(() => {
-    cancel()
-})
+onBeforeUnmount(() => cancel())
 
-watch(() => props.query, () => {
-    getTableData();
-}, {
+watch(() => props.query, () => getTableData(), {
     immediate: true,
     deep: true
 })
 
 defineExpose({
+    source: dataSource,
+    list: dataList,
     refresh: (query: Record) => {
         Object.assign(pagination.value, query),
         getTableData(query);
