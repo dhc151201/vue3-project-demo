@@ -38,39 +38,50 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
     }
 
     const setDefaultValue = () => {
-        const model: any = isRef(FormOptions.model) ? FormOptions.model.value : FormOptions.model ?? {};
-        const modelFieldValue = model[item.field]
+        // used 为false，不赋予初始值
+        if (
+            item.used === false ||
+            (isRef(item.used) && item.used?.value === false) ||
+            (isFunction(item.used) && (item.used as Function)(FormModel.value) === false)
+        ) {
+            FormModel.value[item.field] = undefined
+            return;
+        }
 
-        if (modelFieldValue) {
-            if (item.type === 'picture' || item.type === 'file') {
-                FormModel.value[item.field] = createPictureFileObj(modelFieldValue)
-            }
-            else if (item.type === 'date') {
-                FormModel.value[item.field] = dayjs(modelFieldValue)
-            }
-            else if (item.type === 'date-range') {
-                if (Array.isArray(modelFieldValue)) {
-                    FormModel.value[item.field] = [
-                        modelFieldValue[0] ? dayjs(modelFieldValue[0]) : undefined,
-                        modelFieldValue[1] ? dayjs(modelFieldValue[1]) : undefined
-                    ]
-                }
+        const model: any = (isRef(FormOptions.model) ? FormOptions.model.value : FormOptions.model) ?? {};
+        // 配置的默认值
+        let defaultValue = undefined;
+        if (isRef(item.defaultValue)) {
+            defaultValue = item.defaultValue.value
+        } else if (isFunction(item.defaultValue)) {
+            defaultValue = (item.defaultValue as Function)(FormModel.value)
+        } else {
+            defaultValue = item.defaultValue
+        }
+
+        const VALUE = model[item.field] ?? defaultValue;
+
+        if (item.type === 'picture' || item.type === 'file') {
+            FormModel.value[item.field] = createPictureFileObj(VALUE)
+        }
+        else if (item.type === 'date') {
+            FormModel.value[item.field] = dayjs(VALUE)
+        }
+        else if (item.type === 'date-range') {
+            if (Array.isArray(VALUE)) {
+                FormModel.value[item.field] = [
+                    VALUE[0] ? dayjs(VALUE[0]) : undefined,
+                    VALUE[1] ? dayjs(VALUE[1]) : undefined
+                ]
             } else {
-                FormModel.value[item.field] = modelFieldValue
+                FormModel.value[item.field] = []
             }
         }
+        else if (!['select', 'radio'].includes(item.type as string)) {
+            FormModel.value[item.field] = VALUE ?? ''
+        }
         else {
-            if (isFunction(item.defaultValue)) {
-                FormModel.value[item.field] = (item.defaultValue as Function)(FormModel.value)
-            }
-            else if (isRef(item.defaultValue)) {
-                FormModel.value[item.field] = (item.defaultValue as Ref).value
-            }
-            else {
-                if (!['select', 'radio', 'picture', 'file', 'date', 'date-range'].includes(item.type as string)) {
-                    FormModel.value[item.field] = item.defaultValue ?? ''
-                }
-            }
+            FormModel.value[item.field] = VALUE
         }
     }
 
@@ -303,9 +314,14 @@ export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
     return {
         FormProps,
         FormItems: computed(() => FormItems?.filter((item: FormItem) => {
+            // 不使用
             if (isRef(item.used)) return (item.used as Ref).value;
             if (isFunction(item.used)) return (item.used as Function)(FormState.value)
             if (typeof item.used === 'boolean') return item.used
+            // 隐藏
+            if (isRef(item.hide)) return !(item.hide as Ref).value;
+            if (isFunction(item.hide)) return !(item.hide as Function)(FormState.value)
+            if (typeof item.hide === 'boolean') return !item.hide
             return true;
         })) || [],
         FormState,
