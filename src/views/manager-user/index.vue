@@ -45,16 +45,19 @@
             {
                 label: "账号",
                 field: 'name',
+                required: true
             },
             {
                 label: "密码",
                 field: 'name',
-                type: "password"
+                type: "password",
+                required: true
             },
             {
                 label: "确认密码",
                 field: 'name',
-                type: "password"
+                type: "password",
+                required: true
             },
         ]
     })
