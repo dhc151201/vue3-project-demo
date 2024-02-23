@@ -8,6 +8,12 @@ export const getCookie = (name: string) => {
     else return null;
 }
 
+/**
+ * cookie设置
+ * @param c_name 名称
+ * @param value 值
+ * @param expiredays 有效期（单位：天， 默认30天）
+ */
 export const setCookie = (c_name: any, value: any, expiredays: any = 30) => {
     const exdate = new Date();
     exdate.setDate(exdate.getDate() + expiredays);

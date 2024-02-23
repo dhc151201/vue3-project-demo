@@ -1,3 +1,8 @@
+import { isArray } from "@/utils";
+import { computed } from 'vue';
+import { USER } from "@/hooks/useUserInfo"
+import { $t } from "./useLang";
+
 /**
  * 获取菜单key，父级菜单key
  * @param path 
@@ -32,3 +37,38 @@ export const getPath = (path: string, list: any[]): {
 
     return {}
 }
+
+
+/**
+ * 组建菜单数据
+ * @param obj 
+ * @returns 
+ */
+const getItems = (obj: any): any[] => {
+    const data = []
+    if (!isArray(obj)) {
+        const item: any = {
+            title: $t('menus.' + obj.name),
+            label: $t('menus.' + obj.name),
+            key: obj.url || obj.name,
+            type: obj.title === true ? 'group' : undefined,
+        }
+        if (obj.children) {
+            item.children = getItems(obj.children)
+        }
+        return item
+    } else {
+        for (const item of obj) {
+            data.push(getItems(item))
+        }
+    }
+    return data
+}
+/**
+ * 菜单数据
+ */
+export const menus = computed(() => {
+    const data = getItems(USER.value.user_info?.menus);
+    // console.log(data)
+    return data
+})

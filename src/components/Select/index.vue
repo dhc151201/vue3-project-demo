@@ -1,6 +1,6 @@
 <template>
     <div ref="CurrentInstance" class="dc-darpdown-box">
-        <a-select ref="refInput" class="dc-select" :class="{ 'empty-options': $attrs.options?.length === 0 }"
+        <a-select ref="refInput" class="dc-select" :class="{ 'empty-options': ($attrs.options as any[] | undefined)?.length === 0 }"
             v-bind="$attrs" :getPopupContainer="getPopupContainer">
             <template v-for="(_value, name) in $slots" #[name]="slotData">
                 <slot :name="name" v-bind="slotData || {}" />

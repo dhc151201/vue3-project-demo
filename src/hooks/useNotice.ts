@@ -2,6 +2,8 @@
  * 通知
  */
 import { notification } from 'ant-design-vue';
+import i18n from "@/i18n"
+const { t } = i18n.global;
 
 type config = {
     placement?: 'top' | 'bottom'
@@ -12,7 +14,7 @@ export const notice = {
         notification.success({
             description: context,
             message: '',
-            placement: config?.placement || 'bottom',
+            placement: config?.placement || 'top',
             bottom: '10vh',
             duration: 2
         })
@@ -21,7 +23,7 @@ export const notice = {
         notification.warning({
             description: context,
             message: '',
-            placement: config?.placement || 'bottom',
+            placement: config?.placement || 'top',
             bottom: '7vh',
             duration: 2
         })
@@ -36,3 +38,6 @@ export const notice = {
         })
     },
 }
+
+// 提交成功
+export const notice_submit_success = () => notice.success(t('toast.submit_success'))
