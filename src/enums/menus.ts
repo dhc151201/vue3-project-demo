@@ -39,7 +39,7 @@ export default [
             },
             {
                 label: "角色管理",
-                key: '/manager-system/roles'
+                key: '/manager-role'
             },
             {
                 label: "账号管理",

@@ -51,6 +51,10 @@ const router = createRouter({
     {
       path: "/manager-password",
       component: () => import('@/views/manager-password/index.vue'),
+    },
+    {
+      path: "/manager-role",
+      component: () => import('@/views/manager-role/index.vue'),
     }
   ]
 })
