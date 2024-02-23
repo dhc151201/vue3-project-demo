@@ -21,6 +21,7 @@ export default defineConfig({
           importStyle: false,
         }),
       ],
+      directoryAsNamespace: true
     }),
     viteCompression({
       verbose: true, // 是否在控制台中输出压缩结果
