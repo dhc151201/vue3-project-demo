@@ -60,13 +60,26 @@ const addConfig = ref<ModelFormOptions>({
           label: "商品图片",
           field: 'src',
           type: "picture",
-          maxLength: 1
+          maxLength: 1,
+          defaultValue: [
+            {
+              status: 'done',
+              url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+            }
+          ]
         },
         {
           label: "文件",
           field: 'filefs',
           type: "file",
-          maxLength: 3
+          maxLength: 1,
+          defaultValue: [
+            {
+              status: 'done',
+              name: "sjndjasdas.png",
+              url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+            }
+          ]
         },
         {
           label: "日期",

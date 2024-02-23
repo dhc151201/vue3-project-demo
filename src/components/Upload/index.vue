@@ -4,8 +4,8 @@
         <a-upload
             v-model:file-list="model"
             list-type="picture-card"
-            :disabled="disabled"
             :beforeUpload="beforeUpload"
+            @remove="handelRemove"
             v-bind="item.inputOptions"
         >
             <div v-if="!disabled">
@@ -47,7 +47,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-// import { PlusOutlined } from '@ant-design/icons-vue';
+import { PlusOutlined } from '@ant-design/icons-vue';
 import FileBar from "@/components/FileBar/index.vue"
 import { notice } from '@/hooks/useNotice';
 import { $t } from '@/hooks/useLang';

@@ -284,7 +284,7 @@
     }
 }
 
-
+// 模态框
 .ant-modal{
     .ant-modal-header,
     .ant-modal-content{
@@ -375,9 +375,6 @@
     border-color: @border-color !important;
     background-color: @bg-blank !important;
 }
-.ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select{
-    border-color: @border-color;
-}
 .ant-select-single{
     &.ant-select-open {
         .ant-select-selection-item{
@@ -391,35 +388,51 @@
         background-color: #09090b !important;
     }
 }
-.ant-upload-list.ant-upload-list-picture-card{
-    .ant-upload-list-item{
-        border-color: @border-color !important;
-    }
+
+// 上传
+.ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select{
+    border-color: @border-color;
 }
-.ant-upload-list:not(.ant-upload-list-picture-card){
-    .ant-upload-list-item{
-        background-color: @bg-blank;
-        border-color: transparent !important;
-        &:hover{
-            background-color: @bg-blank !important;
+.ant-upload-list{
+    &.ant-upload-list-picture-card{
+        .ant-upload-list-item{
+            border-color: @border-color !important;
         }
-        .ant-upload-list-item-name,
-        .ant-upload-list-item-actions .anticon{
-            color: @text-label-color !important;
-            &:hover{
-                cursor: pointer;
-                color: @color-primary !important;
+        .ant-upload-list-item-container{
+            &,
+            .ant-upload-list-item,
+            .ant-upload-list-item::before,
+            .ant-upload-list-item-file{
+                transition: none !important;
             }
         }
     }
-    .ant-tooltip{
-        display: none;
-    }
-    .ant-upload-list-item-container{
-        height: auto !important;
+    &:not(.ant-upload-list-picture-card){
+        .ant-upload-list-item{
+            background-color: @bg-blank;
+            border-color: transparent !important;
+            &:hover{
+                background-color: @bg-blank !important;
+            }
+            .ant-upload-list-item-name,
+            .ant-upload-list-item-actions .anticon{
+                color: @text-label-color !important;
+                &:hover{
+                    cursor: pointer;
+                    color: @color-primary !important;
+                }
+            }
+        }
+        .ant-tooltip{
+            display: none;
+        }
+        .ant-upload-list-item-container{
+            height: auto !important;
+        }
     }
 }
 
+// popover
 .bg-lighter-popover {
     .ant-popover-inner {
         background-color: @bg-blank-lighter;

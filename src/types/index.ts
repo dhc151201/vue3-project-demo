@@ -91,7 +91,7 @@ export type FormItem = {
     onChange?: (value: any, model:Ref<Record>) => void, // 输入值变化
     dic?: { label: string | Ref<string>, value: string | number | boolean | Ref<number> | Ref<string> | Ref<boolean> }[],
     slot?: string, // 插槽名称
-    defaultValue?: boolean | Ref<boolean> | string | Ref<string> | number | Ref<number> | ((model: Record) => any), // 默认值
+    defaultValue?: boolean | Ref<boolean> | string | any[] | Ref<string> | number | Ref<number> | ((model: Record) => any), // 默认值
     used?: boolean | Ref<boolean> | ((model: { [key: string]: any }) => boolean), // 是否使用
     hide?: boolean | Ref<boolean> | ((model: { [key: string]: any }) => boolean), // 是否隐藏
     isEmail?: boolean, // 是否是邮箱
