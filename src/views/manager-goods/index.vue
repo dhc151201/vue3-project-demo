@@ -43,80 +43,80 @@ const addConfig = ref<ModelFormOptions>({
     title: '新增',
     width: 1000,
     api: '/errr',
-    // onSubmit: (values) => {
-    //   debugger
-    // },
-  items: [
-      {
-        label: "id",
-        field: 'id',
-        hide: true
-      },
-      {
-        label: "商品名称",
-        field: 'name'
-      },
-      {
-        label: "商品图片",
-        field: 'src',
-        type: "picture",
-        maxLength: 1
-      },
-      {
-        label: "文件",
-        field: 'filefs',
-        type: "file",
-        maxLength: 3
-      },
-      {
-        label: "日期",
-        field: 'date',
-        type: "date",
-      },
-      {
-        label: "日期范围",
-        field: 'daterange',
-        type: "date-range",
-      },
-      {
-        label: "切换",
-        field: 'a',
-        type: "switch",
-      },
-      {
-        label: "复选",
-        field: 'b',
-        type: "checkbox",
-        dic: [
-          { label: "姓名", value: 1 }, 
-          { label: "性别", value: 2 }, 
-        ]
-      },
-      {
-        label: "单选",
-        field: 'c333',
-        type: "radio",
-        dic: [
-          { label: "姓名", value: 1 }, 
-          { label: "性别", value: 2 }, 
-        ]
-      },
-      {
-        label: "购买积分",
-        field: 'jf',
-        type: "select",
-        dic: [
-          { label: "姓名", value: 1 }, 
-          { label: "性别", value: 2 }, 
-        ]
-      },
-      {
-        label: "商品详情",
-        field: 'context',
-        type: "htmlTextarea",
-        used: false
-      },
-    ]
+    onSubmit: async (values) => {
+      debugger
+    },
+    items: [
+        {
+          label: "id",
+          field: 'id',
+          hide: true
+        },
+        {
+          label: "商品名称",
+          field: 'name'
+        },
+        {
+          label: "商品图片",
+          field: 'src',
+          type: "picture",
+          maxLength: 1
+        },
+        {
+          label: "文件",
+          field: 'filefs',
+          type: "file",
+          maxLength: 3
+        },
+        {
+          label: "日期",
+          field: 'date',
+          type: "date",
+        },
+        {
+          label: "日期范围",
+          field: 'daterange',
+          type: "date-range",
+        },
+        {
+          label: "切换",
+          field: 'a',
+          type: "switch",
+        },
+        {
+          label: "复选",
+          field: 'b',
+          type: "checkbox",
+          dic: [
+            { label: "姓名", value: 1 }, 
+            { label: "性别", value: 2 }, 
+          ]
+        },
+        {
+          label: "单选",
+          field: 'c333',
+          type: "radio",
+          dic: [
+            { label: "姓名", value: 1 }, 
+            { label: "性别", value: 2 }, 
+          ]
+        },
+        {
+          label: "购买积分",
+          field: 'jf',
+          type: "select",
+          dic: [
+            { label: "姓名", value: 1 }, 
+            { label: "性别", value: 2 }, 
+          ]
+        },
+        {
+          label: "商品详情",
+          field: 'context',
+          type: "htmlTextarea",
+          used: false
+        },
+      ]
 })
 const editConfig = ref<ModelFormOptions>({
     ...addConfig.value,

@@ -22,29 +22,21 @@ const columns: TableColumns = [
 const addConfig = ref<ModelFormOptions>({
     title: '充值',
     width: 400,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
     },
     items: [
       {
         label: "充值金额",
-        field: 'name'
+        field: 'name',
+        required: true,
+        type: "number",
+        minValue: 0
       },
       {
         label: "充值账户",
         field: 'src',
+        required: true,
       },
     ]
 })
-const editConfig = ref<ModelFormOptions>({
-    ...addConfig.value,
-    title: `编辑`,
-    model: {},
-    onSubmit: (values) => {
-      
-    }
-})
-
-const handelEdit = (record: any) => {
-  editConfig.value.model = record
-}
 </script>
