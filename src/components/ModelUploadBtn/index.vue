@@ -1,45 +1,48 @@
 <template>
     <slot name="btn">
         <a-button type="primary" @click="open = true" v-bind="$attrs">
-            <slot>上传</slot>
+            <slot>{{ t('btn.upload') }}</slot>
         </a-button>
     </slot>
-    <ModelForm :config="config" v-model:open="open"></ModelForm>
+    <ModelForm :config="_config" :params="params" v-model:open="open" @submit-success="emits('submit-success')" @download="download">
+        <template v-for="(_value, name) in $slots" #[name]="slotData">
+            <slot :name="name" v-bind="slotData || {}" />
+        </template>
+    </ModelForm>
 </template>
 <script setup lang="ts">
-import ModelForm from "@/components/ModelForm/index.vue"
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
 import type { FormOptions } from "@/types/index"
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const open = ref(false)
 const props = defineProps({
-    title: {
-        type: String,
-        default: ""
+    config: {
+        type: Object,
+        default: () => ({})
     },
-    field: {
-        type: String,
-        default: 'file'
+    params: {
+        type: Object,
+        default: () => ({})
     },
-    maxLength: {
-        type: [Number, String],
-        default: 1
-    },
-    
 })
+const emits = defineEmits(['submit-success', 'download'])
+const download = (file: any) => emits('download', file)
 
-const config = computed(():FormOptions => {
+const _config = computed(():FormOptions => {
     return Object.assign({
+        title: t('btn.upload'),
+        api: "/test",
         items: [
             {
-                field: props.field,
-                maxLength: Number(props.maxLength),
+                label: t('btn.upload'),
+                field: 'file',
                 type: 'file',
                 required: true,
+                maxLength: 1
             }
         ]
-    }, props, {
-        title: "上传",
-    })
+    }, props.config) as FormOptions
 })
 
 </script>

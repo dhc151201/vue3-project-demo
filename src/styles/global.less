@@ -1,9 +1,187 @@
 /**全局样式文件*/
 @import url('./thame.less');
 
+* {
+    &::-webkit-scrollbar {
+        height: 8px;
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+        border-radius: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        transform: all 500ms;
+        background-color: transparent;
+        border-radius: 8px;
+        box-shadow: inset 0 0 6px transparent;
+    }
+
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-corner {
+        display: none;
+    }
+
+    &::-webkit-resizer {
+        opacity: 0.5;
+    }
+
+    &:hover {
+        &::-webkit-scrollbar-thumb {
+            background-color:  rgba(255, 255, 255, .4);
+        }
+    }
+}
+
 body{
     background-color: @bg-blank;
     color: @text-light-color;
     padding: 0;
     margin: 0;
+}
+
+h1{
+    font-size: 1.5rem;
+}
+
+.panel-drak{
+    background-color: @bg-blank-light;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.mt-1{
+    margin-top: 1rem;
+}
+.mb-1{
+    margin-bottom: 1rem;
+}
+.pt-1{
+    padding-top: 1rem;
+}
+.pb-1{
+    padding-bottom: 1rem;
+}
+.flex{
+    display: flex;
+    &.between{
+       justify-content: space-between; 
+    }
+    &.align-center{
+        align-items: center;
+    }
+}
+.flex-1{
+    flex: 1
+}
+
+
+.link {
+    cursor: pointer;
+    position: relative;
+    &:hover {
+        color: @color-primary;
+        &::after{
+            border-bottom-color: @color-primary;
+        }
+    }
+    &::after{
+        content: "";
+        display: inline-block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 1px;
+        transform: translateY(1px);
+        border-bottom: 1px solid @text-label-color;
+    }
+}
+
+.no-warp {
+    white-space: nowrap;
+}
+.text-overflow-line1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// 文案冒号
+.has-colon::after {
+    content: "：";
+}
+
+.en {
+    .has-colon::after {
+        content: ": ";
+    }
+}
+
+.empty-content{
+    opacity: 0.4;
+}
+
+// 用户角色
+.user-role-bar {
+    .user {
+        background-color: @color-primary-light;
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+        padding: 0.1rem 0.5rem;
+        color: #fff;
+    }
+
+    .role {
+        border-top-right-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+        background-color: #fff;
+        color: #212529;
+        padding: 0.1rem 0.5rem;
+    }
+}
+
+// 统计数量条
+.total-bar {
+    color: @text-label-color;
+    margin-right: 3rem;
+
+    .total {
+        font-size: 1.1rem;
+        color: #fff;
+    }
+
+    &.small {
+        .total {
+            font-size: 1.3em;
+        }
+    }
+}
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 500ms both;
+
+    &.faster {
+        animation-duration: 150ms;
+    }
+
+    &.fast {
+        animation-duration: 300ms;
+    }
+
+    &.delay-300 {
+        animation-delay: 300ms;
+    }
 }

@@ -1,14 +1,14 @@
 <template>
     <slot name="btn">
         <a-button type="primary" @click="handelExport" v-bind="$attrs" :loading="loading" :disabled="loading">
-            <slot>导出</slot>
+            <slot>{{t('btn.export')}}</slot>
         </a-button>
     </slot>
 </template>
 <script setup lang="ts">
-import fileDownload from "js-file-download";
-import useRequest from "@/hooks/useRequest";
-import { notice } from "@/hooks/useNotice";
+import { downloadFile } from "@/hooks/useDownload"
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const props = defineProps({
     api: {
@@ -25,15 +25,7 @@ const props = defineProps({
     }
 })
 
-const { run, loading } = useRequest(props.api, {
-    manual: true,
-    method: 'post',
-    onSuccess: (res: any) => {
-        notice.success('开始下载中, 请在浏览器下载管理中查看下载进度')
-        fileDownload(res, props.fileName);
-    }
-})
-
+const { run, loading } = downloadFile()
 const handelExport = () => {
     run(props.query)
 }

@@ -78,6 +78,14 @@ export const isPicture = (file_name: string): boolean => {
   return /(.png|.jpeg|.bmp|.gif|.jpg|.webp)/.test(file_name)
 }
 /**
+ * 检测是否是流
+ * @param data 数据
+ * @returns  boolean
+ */
+export const isBlob = function (data: any) {
+  return typeof data === 'object' && Object.prototype.toString.call(data) === '[object Blob]';
+}
+/**
  * 检测有个对象中，是否存在指定的key值
  * @param val 检测的对象
  * @param key 指定的key值
@@ -122,11 +130,15 @@ export const debounce = function (fun: Function, wait?: number) {
   if (!wait) return fun;
   let timer: any;
   return (...args: any[]) => {
-    return new Promise((reslove) => {
+    return new Promise((reslove, reject) => {
       if (timer) clearTimeout(timer);
       timer = setTimeout(async () => {
-        const result = await fun(...args);
-        reslove(result);
+        try {
+          const result = await fun(...args);
+          reslove(result);
+        } catch (e) {
+          reject(e)
+        }
       }, wait);
     });
   };

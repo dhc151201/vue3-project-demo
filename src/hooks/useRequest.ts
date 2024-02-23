@@ -1,15 +1,14 @@
 import { isRef, ref, type Ref } from "vue";
 import axios from "axios";
-import {
-  isString,
-  isObject,
-  isFunction,
-  awaitTime,
-  throttle,
-  debounce,
-  cloneDeep,
-} from "@/utils/index";
+import { isString, isObject, isFunction, awaitTime, debounce, cloneDeep, isBlob } from "@/utils/index";
 import { notice } from "@/hooks/useNotice"
+import { getCookie } from "./useCookie";
+import i18n from "@/i18n"
+import { loginOut } from "./useUserInfo";
+import useErrorModel from "./useErrorModel";
+import { timezone } from "./useTimezone";
+import type { RequestConfig, RequestResult, RequestApi, Record } from "@/types";
+const { t, locale } = i18n.global;
 
 const CancelToken = axios.CancelToken;
 const instance = axios.create({
@@ -17,77 +16,45 @@ const instance = axios.create({
   timeout: 60000,
 });
 
-type Record = { [key: string]: any };
-type service = string | (() => string) | Ref<string>;
-type Method =
-  | "get"
-  | "GET"
-  | "delete"
-  | "DELETE"
-  | "head"
-  | "HEAD"
-  | "options"
-  | "OPTIONS"
-  | "post"
-  | "POST"
-  | "put"
-  | "PUT"
-  | "patch"
-  | "PATCH"
-  | "purge"
-  | "PURGE"
-  | "link"
-  | "LINK"
-  | "unlink"
-  | "UNLINK";
-type serviceConfig = {
-  method?: Method; // 请求方式
-  onBefore?: Function; // 请求前回调, 回调参数为请求配置（深拷贝），若要修改，必须修改后 return 出新的配置
-  onSuccess?: Function; // 成功回调
-  onError?: Function; // 错误回调
-  onFinally?: Function; // 请求完成回调
-  loadingDelay?: number; // 延迟loading
-  defaultParams?: Record | (() => Record) | Ref<Record>; // 默认参数
-  refreshDeps?: string[]; // 监听哪些字段的变化，而自动发起请求
-  loopInterval?: number; // 轮训时间，不设置则不会进行轮训
-  debounceInterval?: number; // 防抖时间
-  throttleInterval?: number; // 节流时间
-  manual?: boolean; // 是否手动请求, 为true时，请手动调用返回的run函数发起请求。
-  headers?: Record | Function; // header配置
-  responseType?: "json" | "blob";
-  auth?: string // 权限校验
-};
-type response = {
-  data: Ref<any>; // 响应数据
-  success: Ref<boolean>; // 请求成功状态
-  error: Ref<boolean>; // 请求错误状态
-  done: Ref<boolean>; // 请求完成状态
-  loading: Ref<boolean>; // loading状态
-  run: Function; // 手动触发useRequest执行，参数会传递给service
-  cancel: Function; // 取消接口
-  refresh: Function; // 刷新接口，参数会传递给service
-  response: Ref<any>; // 响应全部内容
-};
+// 错误类型
+const error_type: {[key: string]: (data: Record) => unknown} = {
+  normal: (data: any) => {
+    notice.error(t(data.code || 'Network Error.'))
+  },
+  params_errors: (data: any) => {
+    notice.error(Object.values(data.data ?? {}).join(' '))
+  },
+  multiple_base: (data: any) => {
+    const { openErrorModel } = useErrorModel()
+    openErrorModel({
+      errors: data.data ?? {},
+      isArray: Array.isArray(data.data)
+    })
+  },
+  default: (data) => {
+    notice.error(JSON.stringify(data))
+  }
+}
 
 // 请求类
 class REQUEST {
   _cancel: any
-  async request(url: string, options: serviceConfig, query: { [key: string]: any }): Promise<any> {
-    return await instance.request(this.createOptions(url, options, query))
+  async request(url: string, options: RequestConfig, query: { [key: string]: any }): Promise<any> {
+    const config = this.createOptions(url, options, query)
+    return await instance.request(config)
   }
   cancel() {
     if (isFunction(this._cancel)) {
       this._cancel()
     }
   }
-  createOptions(url: string, options: serviceConfig = {}, query: any = {}) {
+  createOptions(url: string, options: RequestConfig = {}, query: any = {}) {
     const config: any = {
       url: url,
       method: options.method ?? "get"
     }
 
     const queryData = {
-      // timezone: useTimezone().getTimezone().value,
       ...(isRef(options.defaultParams) ? options.defaultParams.value : isFunction(options.defaultParams) ? (options.defaultParams as Function)() : options.defaultParams),
       ...cloneDeep(query),
     }
@@ -99,8 +66,10 @@ class REQUEST {
     }
 
     // header 配置
-    const TOKEN = "";
     config.headers = {
+      Authorization: decodeURIComponent('Bearer ' + getCookie('token')),
+      lang: locale.value,
+      timezone: timezone.value,
       ...config.headers || {},
       ...options.headers || {}
     }
@@ -120,17 +89,18 @@ class REQUEST {
 }
 // 状态数据管理类
 class SATAES extends REQUEST {
-  loading = ref(false)
-  success = ref(false)
-  error = ref(false)
-  done = ref(false)
-  data = ref({})
-  response = ref({})
+  loading = ref<boolean>(false)
+  success = ref<boolean>(false)
+  error = ref<boolean>(false)
+  done = ref<boolean>(false)
+  data = ref<any>({})
+  response = ref<any>({})
   _looptask = null
-  _service: service = ""
-  _options: serviceConfig = {}
+  _service: RequestApi = ""
+  _options: RequestConfig = {}
   _url: string = ""
-  constructor(url: service, options: serviceConfig) {
+  _catch_key: string = ''
+  constructor(url: RequestApi, options: RequestConfig) {
     super()
     this._service = url;
     this._options = options;
@@ -161,10 +131,10 @@ class SATAES extends REQUEST {
 }
 // 请求入口类
 class HTTP_REQUEST extends SATAES {
-  run: Function;
-  constructor(url: service, options: serviceConfig = {}) {
+  run: (query?: Record) => Promise<unknown>;
+  constructor(url: RequestApi, options: RequestConfig = {}) {
     super(url, options)
-    this.run = throttle(this._run.bind(this), options.throttleInterval);
+    this.run = debounce(this._run.bind(this), options.debounceInterval || 0) as any;
     // 自动请求
     if (options.manual !== true) {
       this.run();
@@ -174,23 +144,15 @@ class HTTP_REQUEST extends SATAES {
     try {
       await this.onBefore()
       // 发出请求
-      const response = await this.request(this._url, this._options, query).catch(response => {
-        this.response.value = response
-        throw response.response?.data || response.response || response;
-      })
+      const response = await this.request(this._url, this._options, query)
+
       this.response.value = response
-      // 异常拦截
-      if (![200, 201, 204].includes(response.status)) {
-        this.error.value = true
-        throw response;
-      }
-      if (response?.data?.ret && response.data.ret > 0) {
-        this.error.value = true
-        throw response.data;
-      }
-      // 请求成功
-      this.onSuccess(response)
-      return response.data
+      const { data } = response
+
+      if (data && data.status !== 0 && !isBlob(data)) throw { response };
+     
+      this.onSuccess(data)
+      return data
     } catch (e: any) {
       this.onError(e)
     } finally {
@@ -222,42 +184,38 @@ class HTTP_REQUEST extends SATAES {
 
     this.resetState("start")
   }
-  onSuccess(res: any) {
+  onSuccess(data: any = {}) {
     this.success.value = true
-    this.data.value = res.data ?? {};
+    this.data.value = data;
 
     if (this._options.onSuccess && isFunction(this._options.onSuccess)) {
-      this._options.onSuccess(this.data.value)
+      this._options.onSuccess(data)
     }
   }
   onError(e: any) {
-    // 权限拦截
-    if (isString(e) && e.includes('no auth request')) return;
-    // 手动取消
-    if (e.name === 'CanceledError') return;
-    // 401 未登录 或 登录token失效
-    if (e.status_code === 401) {
-      // loginOut()
-      return;
-    }
-    // 请求失败
-    console.error(e);
-    // status_code 403： 没有权限调用接口
-    // ret 1002： 文件上传格式的相关的错误信息
-    if (isObject(e) && e?.ret !== 1002 && e.status_code != 403) {
-      const msg = e?.message || e?.msg;
-      notice.warning(msg || "request error")
+    if (!e) return;
+    const { message, status: httpStatus, data, name } = e?.response || {}
+
+    if(httpStatus === 403 || name === 'CanceledError') return
+    if (httpStatus === 401) return loginOut()
+  
+    this.error.value = true
+    // 业务请求失败
+    if (isObject(data)) {
+      error_type[data.error_type] ? error_type[data.error_type](data) : error_type['default'](data);
+    } else if (message) {
+      notice.error(message)
     }
     if (this._options.onError && isFunction(this._options.onError)) {
       this._options.onError(e)
     }
     throw e
   }
-  async onFinally(query?: any) {
+  async onFinally(query?: Record) {
     this.resetState("end")
 
     if (this._options.onFinally && isFunction(this._options.onFinally)) {
-      this._options.onFinally(this.data)
+      this._options.onFinally(this.data.value)
     }
 
     if (this._options.loopInterval) {
@@ -275,7 +233,7 @@ class HTTP_REQUEST extends SATAES {
  * @param options 请求配置项
  * @returns {data, loading, run, refresh, cancel, ... }
  */
-export default function (url: service, options: serviceConfig = {}): response {
+export default function (url: RequestApi, options: RequestConfig = {}): RequestResult {
   const fn = new HTTP_REQUEST(url, options)
   return {
     ...fn,

@@ -1,12 +1,14 @@
 /***
  * 表单模型
  */
-import { debounce, isArray, isEmailStr, isFunction, isObject, isString } from "@/utils"
-import {isRef, ref, watch, computed} from "vue"
-import type { Ref } from "vue"
+import { debounce, isArray, isEmailStr, isFunction, isObject, isString, tryRemoveItemArray } from "@/utils"
+import { isRef, ref, watch, computed } from "vue"
+import type { Ref, ComputedRef } from "vue"
 import type { ModelFormOptions,FormItem, FormOptions, Record, WatchField } from "@/types"
 import dayjs from "dayjs"
 import useRequest from "./useRequest"
+import i18n from "@/i18n"
+const { t } = i18n.global;
 
 /**
  * 默认值处理
@@ -14,9 +16,22 @@ import useRequest from "./useRequest"
  * @param FormOptions FormOptions配置
  * @param FormModel 表单数据
  */
-const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<Record>) => {
-
-    const createPictureFileObj = (data: string | string[] | Record | Record[]): any[] => {
+const handelDefaultValue = (item: FormItem, FormOptions: Ref<FormOptions>, FormModel: Ref<Record>) => {
+    // 默认表单模型变化，used变化
+    watch(() => {
+        const model = FormOptions.value.model || {}
+        return {
+            modelValue: isRef(model) ? (model as Ref).value[item.field] : model[item.field],
+            used: isRef(item.used) ? item.used.value : (isFunction(item.used) ? (item.used as Function)(FormModel.value) : null)
+        }
+    }, () => {
+        setDefaultValue()
+    }, {
+        deep: true,
+        immediate: true
+    })
+    // 生成文件信息
+    function createPictureFileObj (data: string | string[] | Record | Record[]): any[] {
         const result = []
         if (Array.isArray(data)) {
             for (let i = 0; i < data.length; i++){
@@ -36,8 +51,8 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
         }
         return result
     }
-
-    const setDefaultValue = () => {
+    // 设置默认值函数
+    function setDefaultValue() {
         // used 为false，不赋予初始值，如果需要赋予初始值，不显示在表单中，请配置hide: true
         if (
             item.used === false ||
@@ -48,7 +63,7 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
             return;
         }
 
-        const model: any = (isRef(FormOptions.model) ? FormOptions.model.value : FormOptions.model) ?? {};
+        const model: any = (isRef(FormOptions.value.model) ? FormOptions.value.model.value : FormOptions.value.model) ?? FormModel.value ?? {};
         // 配置的默认值
         let defaultValue = undefined;
         if (isRef(item.defaultValue)) {
@@ -61,82 +76,39 @@ const handelDefaultValue = (item: FormItem, FormOptions: FormOptions, FormModel:
 
         const VALUE = model[item.field] ?? defaultValue;
 
-        if (item.type === 'picture' || item.type === 'file') {
-            FormModel.value[item.field] = createPictureFileObj(VALUE)
+        // 被解构的字段
+        if (isArray(item.fieldExploded)) { 
+            FormModel.value[item.field] = item.fieldExploded?.map((key: string) => {
+                return model[key] ?? undefined
+            }) || []
+            if (FormModel.value[item.field].filter((v: any) => v).length == 0) {
+                FormModel.value[item.field] = VALUE ?? undefined
+            }
+        }
+        else if (item.type === 'picture' || item.type === 'file') {
+            FormModel.value[item.field] = createPictureFileObj(VALUE) ?? []
         }
         else if (item.type === 'date') {
-            FormModel.value[item.field] = VALUE ? dayjs(VALUE) : ''
+            FormModel.value[item.field] = VALUE ? VALUE : ''
         }
         else if (item.type === 'date-range') {
             if (Array.isArray(VALUE)) {
                 FormModel.value[item.field] = [
-                    VALUE[0] ? dayjs(VALUE[0]) : undefined,
-                    VALUE[1] ? dayjs(VALUE[1]) : undefined
+                    VALUE[0] ? VALUE[0] : undefined,
+                    VALUE[1] ? VALUE[1] : undefined
                 ]
             } else {
                 FormModel.value[item.field] = []
             }
         }
-        else if (!['select', 'radio'].includes(item.type as string)) {
+        else if (['select-multiple', 'checkbox'].includes(item.type as string)) {
+            FormModel.value[item.field] = VALUE ?? []
+        }
+        else if (!['select', 'radio', 'switch'].includes(item.type as string)) {
             FormModel.value[item.field] = VALUE ?? ''
         }
         else {
             FormModel.value[item.field] = VALUE
-        }
-    }
-
-    // 默认表单模型变化，used变化
-    watch(() => {
-        const model = FormOptions.model || {}
-        return {
-            modelValue: isRef(model) ? (model as Ref).value[item.field] : model[item.field],
-            used: isRef(item.used) ? item.used.value : (isFunction(item.used) ? (item.used as Function)(FormModel.value) : null)
-        }
-    }, () => {
-        setDefaultValue()
-    }, {
-        deep: true,
-        immediate: true
-    })
-}
-
-/**
- * 验证规则
- * @param item useFormModel表单配置项
- */
-const handelValidator = (item: FormItem) => {
-    if (!item.options) item.options = {}
-    
-    item.options.rules = {
-        required: item.required,
-        validator: (rule: any, value: any, callback: any) => {
-            if (item.required && ['', undefined, null].includes(value)) {
-                if (['select', 'radio', 'checkbox', 'date', 'date-range', 'picture', 'file'].includes(item.type as string)) {
-                    return Promise.reject('请选择' + (item.label || {picture: "图片", file: "文件"}[item.type as string]))
-                }
-                return Promise.reject('请输入' + item.label)
-            }
-            if (value) {
-                if (item.isEmail && !isEmailStr(value)) {
-                    return Promise.reject('邮箱格式不正确')
-                }
-                if (item.isInt && value != Math.floor(value)) {
-                    return Promise.reject('只能输入整数')
-                }
-                if (item.isNoChinese && /.*[\u4e00-\u9fa5]+.*$/.test(value)) {
-                    return Promise.reject('不能输入中文')
-                }
-                if (item.isNoSpecial && /(,|\?)/.test(value)) {
-                    return Promise.reject('不能输入特殊字符')
-                }
-                if (item.minValue !== undefined && value < item.minValue) {
-                    return Promise.reject('最小值不能小于' + item.minValue)
-                }
-                if (item.maxValue !== undefined && value > item.maxValue) {
-                    return Promise.reject('最大值不能大于' + item.maxValue)
-                }
-            }
-            return Promise.resolve()
         }
     }
 }
@@ -146,12 +118,69 @@ const handelValidator = (item: FormItem) => {
  * @param item useFormModel表单配置项
  * @param FormOptions FormOptions配置
  */
-const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
-    item.options = ref(Object.assign({
+const handeFormItemProps = (item: FormItem, FormOptions: Ref<FormOptions>) => {
+    item.options = Object.assign({
         label: item.label,
         name: item.field,
-        required: FormOptions.readonly ? false : item.required,
-    }, item.options || {}))
+        required: FormOptions.value.readonly ? false : item.required,
+        rules: getValidator()
+    }, item.options ?? {})
+
+    if (item.type === 'date' || item.type === 'date-range') {
+        item.options.label = `${item.label || ''}（UTC+0）`
+    }
+
+    // 验证规则
+    function getValidator() {
+        return {
+            required: item.required,
+            validator: (rule: any, value: any) => {
+                const TYPE: string = item.type as string;
+                const isEmpty: boolean = ['', undefined, null].includes(value);
+                if (item.required) {
+                    const label = item.label ?? ''
+                    // 数组格式
+                    if (['select-multiple', 'checkbox', 'date-range', 'picture', 'file'].includes(TYPE)) {
+                        if (isEmpty || value?.filter((v: any) => !['', undefined, null].includes(v))?.length == 0) {
+                            return Promise.reject(t('select.placeholder') + label)
+                        }
+                    }
+                    // 选择动作
+                    else if (['select', 'radio', 'date'].includes(TYPE)) {
+                        if (isEmpty) {
+                            return Promise.reject(t('select.placeholder') + label)
+                        }
+                    }
+                    // 输入动作
+                    else if (isEmpty) {
+                        return Promise.reject(t('please_input') + label)
+                    }
+                }
+                
+                if (value) {
+                    if (item.isEmail && !isEmailStr(value)) {
+                        return Promise.reject(t('contract_email_format_error'))
+                    }
+                    if (item.isInt && value != Math.floor(value)) {
+                        return Promise.reject(t('int_value'))
+                    }
+                    if (item.isNoChinese && /.*[\u4e00-\u9fa5]+.*$/.test(value)) {
+                        return Promise.reject(t('name_chinese_not_allowed'))
+                    }
+                    if (item.isNoSpecial && /(,|\?)/.test(value)) {
+                        return Promise.reject(t('no_has_specialchar'))
+                    }
+                    if (item.minValue !== undefined && value < item.minValue) {
+                        return Promise.reject(t('min_value') + item.minValue)
+                    }
+                    if (item.maxValue !== undefined && value > item.maxValue) {
+                        return Promise.reject(t('max_value') + item.maxValue)
+                    }
+                }
+                return Promise.resolve()
+            }
+        }
+    }
 }
 
 /**
@@ -159,27 +188,25 @@ const handeFormItemProps = (item: FormItem, FormOptions: FormOptions) => {
  * @param item useFormModel表单配置项
  * @param FormOptions FormOptions配置
  */
-const handelFormInputProps = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<Record>) => {
+const handelFormInputProps = (item: FormItem, FormOptions: Ref<FormOptions>, FormModel: Ref<Record>) => {
     const inputOptions = {
-        placeholder: FormOptions.readonly ? '' : "请输入",
-        readonly: FormOptions.readonly,
+        placeholder: FormOptions.value.readonly ? '' : t('please_input'),
+        readonly: FormOptions.value.readonly,
         name: item.field,
+        maxLength: item.maxLength,
     }
     if (item.type === 'select' || item.type === 'checkbox' || item.type === 'radio') {
         Object.assign(inputOptions, {
             options: item.dic || [],
-            placeholder: FormOptions.readonly ? '' : "请选择",
-            showArrow: !FormOptions.readonly,
-            allowClear: !FormOptions.readonly,
+            placeholder: FormOptions.value.readonly ? '' : t('select.placeholder'),
+            showArrow: !FormOptions.value.readonly,
+            allowClear: !FormOptions.value.readonly,
         })
     }
     if (item.type === 'picture' || item.type === 'file') {
         Object.assign(inputOptions, {
             action: '',
             accept: item.type === 'picture' ? 'image/*' : '',
-            beforeUpload: () => {
-                return Promise.reject('')
-            }
         })
         /*
         watch(() => FormModel.value[item.field], () => {
@@ -197,7 +224,7 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions, FormMode
     }
     if (item.type === 'date' || item.type === 'date-range') {
         Object.assign(inputOptions, {
-            placeholder: FormOptions.readonly ? '' : (item.type === 'date' ? "请选择" : ['开始日期', '结束日期']),
+            placeholder: FormOptions.value.readonly ? '' : (item.type === 'date' ? t('select.placeholder') : ['开始日期', '结束日期']),
             inputReadOnly: true,
             format: 'YYYY-MM-DD',
             valueFormat: 'YYYY-MM-DD',
@@ -205,7 +232,28 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions, FormMode
         })
     }
 
-    item.inputOptions = ref(Object.assign(inputOptions, item.inputOptions || {}))
+    if (item.type === 'switch') {
+        Object.assign(inputOptions, {
+            checkedValue: item.dic && item.dic[0].value,
+            checkedChildren: item.dic && item.dic[0].label,
+            unCheckedValue:  item.dic && item.dic[1].value,
+            unCheckedChildren:  item.dic && item.dic[1].label
+        })
+    }
+
+    // 被解构赋值时
+    if (isArray(item.fieldExploded)) {
+        watch(() => FormModel.value[item.field], (value: any[] = []) => {
+            item.fieldExploded?.forEach((key: string, index: number) => {
+                FormModel.value[key] = value[index] ?? undefined
+            })
+        }, {
+            immediate: true,
+            deep: true
+        })
+    }
+
+    item.inputOptions = Object.assign(inputOptions, item.inputOptions || {})
 }
 
 /**
@@ -214,7 +262,7 @@ const handelFormInputProps = (item: FormItem, FormOptions: FormOptions, FormMode
  * @param FormOptions FormOptions配置
  * @param FormModel 表单数据
  */
-const handelFormWatchField = (item: FormItem, FormOptions: FormOptions, FormModel: Ref<Record>) => {
+const handelFormWatchField = (item: FormItem, FormOptions: Ref<FormOptions>, FormModel: Ref<Record>) => {
     if (!item.watchField) return;
 
     const { run: getRemoteData, cancel: cancelGetRemoteData } = useRequest(item.watchFieldApi ?? '', {
@@ -293,42 +341,55 @@ const handelFormWatchField = (item: FormItem, FormOptions: FormOptions, FormMode
 }
 
 // 表单
-export const useForm = (FormOptions: FormOptions, FormItems: FormItem[]) => {
+export const useForm = (FormOptions: Ref<FormOptions>, propState?: Ref<Record>) => {
 
     const FormState = ref<{ [key: string]: any }>({})
+    if (propState) {
+        watch(propState, () => {
+            FormState.value = propState.value
+        }, {
+            immediate: true,
+            deep: true
+        })
+    }
+    
     const FormProps = computed(() => {
         return Object.assign(
-            (isRef(FormOptions.options) ? FormOptions.options.value : FormOptions.options) ?? {},
-            { readonly: FormOptions.readonly }
+            (isRef(FormOptions.value.options) ? FormOptions.value.options.value : FormOptions.value.options) ?? {},
+            {
+                readonly: FormOptions.value.readonly,
+                scrollToFirstError: true,
+                hideRequiredMark: FormOptions.value.readonly
+            }
         )
     })
 
-    FormItems?.forEach((item: FormItem) => {
+    const items = computed(() => (FormOptions.value.items?.filter((item: FormItem) => {
+        // 不使用
+        if (isRef(item.used)) return (item.used as Ref).value;
+        if (isFunction(item.used)) return (item.used as Function)(FormState.value)
+        if (typeof item.used === 'boolean') return item.used
+        // 隐藏
+        if (isRef(item.hide)) return !(item.hide as Ref).value;
+        if (isFunction(item.hide)) return !(item.hide as Function)(FormState.value)
+        if (typeof item.hide === 'boolean') return !item.hide
+        return true;
+    }) || []).map((item: FormItem) => {
         handelDefaultValue(item, FormOptions, FormState)
         handeFormItemProps(item, FormOptions)
-        handelValidator(item)
         handelFormInputProps(item, FormOptions, FormState)
         handelFormWatchField(item, FormOptions, FormState)
-    })
+        return item
+    }))
 
     return {
         FormProps,
-        FormItems: computed(() => FormItems?.filter((item: FormItem) => {
-            // 不使用
-            if (isRef(item.used)) return (item.used as Ref).value;
-            if (isFunction(item.used)) return (item.used as Function)(FormState.value)
-            if (typeof item.used === 'boolean') return item.used
-            // 隐藏
-            if (isRef(item.hide)) return !(item.hide as Ref).value;
-            if (isFunction(item.hide)) return !(item.hide as Function)(FormState.value)
-            if (typeof item.hide === 'boolean') return !item.hide
-            return true;
-        })) || [],
+        FormItems: items,
         FormState,
     }
 }
 
 // 弹窗表单
-export const useFormModel = (FormOptions: ModelFormOptions, FormItems: FormItem[]) => { 
-    return useForm(FormOptions, FormItems)
+export const useFormModel = (FormOptions: Ref<ModelFormOptions>) => { 
+    return useForm(FormOptions)
 }

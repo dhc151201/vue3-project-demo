@@ -4,7 +4,7 @@
         style="border-bottom: 1px solid #ccc"
         :editor="editorRef"
         :defaultConfig="toolbarConfig"
-        :mode="mode"
+        mode="simple"
       />
       <Editor
         :style="`height: ${height}px; overflow-y: hidden;`"
@@ -15,7 +15,7 @@
       />
     </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import '@wangeditor/editor/dist/css/style.css'
 import { onBeforeUnmount, shallowRef, computed } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
@@ -88,7 +88,7 @@ onBeforeUnmount(() => {
     editor.destroy()
 })
 
-const handleCreated = (editor) => {
+const handleCreated = (editor: any) => {
   editorRef.value = editor // 记录 editor 实例，重要！
 }
 </script>  

@@ -5,7 +5,7 @@
         </a-layout-header>
         <a-layout>
             <slot v-if="!fullRouterView" name="menu"></slot>
-            <a-layout-content class="layout-content">
+            <a-layout-content class="layout-content" id="Router-Page">
                 <slot name="page-content"></slot>
             </a-layout-content>
         </a-layout>
@@ -43,10 +43,12 @@ defineProps({
 
     .layout-content {
         padding-left: 1.5rem;
-        padding-top: 1.5rem;
         padding-right: 1.5rem;
         padding-bottom: 1rem;
         overflow: auto;
+        &>:deep(*:first-child){
+            margin-top: 1.5rem;
+        }
     }
 }
 </style>
