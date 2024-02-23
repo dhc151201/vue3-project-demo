@@ -43,11 +43,11 @@ export default [
             },
             {
                 label: "账号管理",
-                key: '/manager-system/users',
+                key: '/manager-user',
             },
             {
                 label: "修改密码",
-                key: '/manager-system/pwd'
+                key: '/manager-password'
             },
         ]
     }

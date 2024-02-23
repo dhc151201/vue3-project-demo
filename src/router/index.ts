@@ -43,6 +43,14 @@ const router = createRouter({
     {
       path: '/manager-widthdraw/information',
       component: () => import('@/views/manager-widthdraw/information.vue'),
+    },
+    {
+      path: "/manager-user",
+      component: () => import('@/views/manager-user/index.vue'),
+    },
+    {
+      path: "/manager-password",
+      component: () => import('@/views/manager-password/index.vue'),
     }
   ]
 })

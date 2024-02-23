@@ -57,7 +57,7 @@
                         <a-radio-group v-else-if="item.type == 'radio'" v-model:value="model[item.field]" v-bind="getInputOptions(item)"/>
                         <dc-select v-else-if="item.type == 'select' || item.type == 'select-multiple'" v-model:value="model[item.field]" v-bind="getInputOptions(item)"/>
                         <a-switch v-else-if="item.type == 'switch'" v-model:checked="model[item.field]" v-bind="getInputOptions(item)"/>
-                        <!-- 图片上传 -->
+                        <!-- 图片文件上传 -->
                         <template v-else-if="item.type == 'picture' || item.type == 'file'">
                             <Upload 
                                 :item="item" 
@@ -77,7 +77,7 @@
                 </a-form-item>
             </template>
             <slot :submit="handelSubmit" :model="model" :loading="state.loading" name="footer">
-                <!-- <a-button :disabled="state.loading" type="primary" @click.prevent.stop="handelSubmit">{{$t('btn.confirm')}}</a-button> -->
+                <!-- <a-button :disabled="state.loading" type="primary" @click.prevent.stop="handelSubmit">保存</a-button> -->
             </slot>
         </a-form>
     </Laoding>
@@ -186,7 +186,7 @@ const FormItemProps = computed(() => (item: FormItem) => {
 // 绑定在表单输入组件上的属性
 function getInputOptions(item: FormItem) {
     const inputOptions = {
-        placeholder: FormProps.value.readonly ? '' : $t('please_input'),
+        placeholder: FormProps.value.readonly ? '' : '请输入',
         readonly: FormProps.value.readonly,
         name: item.field,
         maxLength: item.maxLength,
@@ -194,7 +194,7 @@ function getInputOptions(item: FormItem) {
     if (item.type === 'select' || item.type === 'checkbox' || item.type === 'radio') {
         Object.assign(inputOptions, {
             options: item.dic || [],
-            placeholder: FormProps.value.readonly ? '' : $t('select.placeholder'),
+            placeholder: FormProps.value.readonly ? '' : '请选择',
             showArrow: !FormProps.value.readonly,
             allowClear: !FormProps.value.readonly,
         })
@@ -207,7 +207,7 @@ function getInputOptions(item: FormItem) {
     }
     if (item.type === 'date' || item.type === 'date-range') {
         Object.assign(inputOptions, {
-            placeholder: FormProps.value.readonly ? '' : (item.type === 'date' ? $t('select.placeholder') : [$t('start_date'), $t('end_date')]),
+            placeholder: FormProps.value.readonly ? '' : (item.type === 'date' ? '请选择' : ['开始日期', '结束日期']),
             inputReadOnly: true,
             format: 'YYYY-MM-DD',
             valueFormat: 'YYYY-MM-DD',
@@ -253,12 +253,12 @@ const handelSubmit = async () => {
         const data = Object.assign({ ...props.params }, { ...model.value });
         tryFieldExploded(data)
         await uploadLocalFiles(data)
-        state.loadingTip = $t('form_submit')
+        state.loadingTip = '数据提交保存中...'
         // 数据提交
         if (props.config.onSubmit) {
             await props.config.onSubmit(data)
             if(props.config.onSuccess) await props.config.onSuccess()
-            notice.success($t('toast.submit_success'))
+            notice.success("提交成功")
             emits('submit-success')
         } else if (props.config.api) {
             const { run } = useRequest(props.config.api, {
@@ -267,7 +267,7 @@ const handelSubmit = async () => {
             })
             await run(data)
             if(props.config.onSuccess) await props.config.onSuccess()
-            notice.success($t('toast.submit_success'))
+            notice.success("提交成功")
             emits('submit-success')
         }
         return data
@@ -290,7 +290,7 @@ const download = (file: any) => emits('download', file)
 async function runOnBeforeMount() {
     if (!props.config.onBeforeMount) return
 
-    state.loadingTip = $t('data_loading')
+    state.loadingTip = "数据读取中..."
     state.loading = true
     await props.config.onBeforeMount(props.params)
     state.loading = false
@@ -333,7 +333,7 @@ async function checkLocalUploadFileChanged () {
     })
     const localChangeFiles = await diffFiles(files as any[])
     if (localChangeFiles) {
-        notice.error($t('upload_file_error').replace('${}', localChangeFiles.map(v => v.name).join("、")))
+        notice.error(`${localChangeFiles.map(v => v.name).join("、")} 文件异常，请重新选择上传`)
         return Promise.reject('')
     }
     return Promise.resolve()

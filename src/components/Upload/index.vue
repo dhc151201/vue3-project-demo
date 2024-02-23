@@ -1,19 +1,20 @@
 <template>
     <!-- 图片上传 -->
-    <!-- <template v-if="item.type == 'picture'">
+    <template v-if="item.type == 'picture'">
         <a-upload
             v-model:file-list="model"
             list-type="picture-card"
+            :disabled="disabled"
             :beforeUpload="beforeUpload"
             v-bind="item.inputOptions"
         >
-            <div v-if="!model || !item.maxLength || model.length < item.maxLength">
+            <div v-if="!disabled">
                 <plus-outlined />
-                <div style="margin-top: 8px">{{ $t('llyscdwn') }}</div>
+                <div style="margin-top: 8px">选择文件</div>
             </div>
         </a-upload>
         <span v-if="item.maxLength" class="upload-tip">最多上传{{item.maxLength}}个图片</span>
-    </template> -->
+    </template>
     <!-- 文件上传 -->
     <template v-if="item.type == 'file'">
         <a-upload
@@ -25,9 +26,9 @@
         >
             <div class="chose-file-bar">
                 <a-button size="small" type="primary" :disabled="disabled">
-                    {{ $t('llyscdwn') }}
+                    选择文件
                 </a-button>
-                <span @click.stop v-if="item.maxLength" style="margin-left: 0.5rem;" class="upload-tip">{{$t('max_upload_files').replace('${}', item.maxLength)}}</span>    
+                <span @click.stop v-if="item.maxLength" style="margin-left: 0.5rem;" class="upload-tip">最多上传{{item.maxLength}}个文件</span>    
             </div>
         </a-upload>
         <div @click.stop>
