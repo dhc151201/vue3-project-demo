@@ -89,8 +89,7 @@ const editConfig = ref<ModelFormOptions>({
 const handelEdit = (record: any) => {
   editConfig.value.readonly = false
   editConfig.value.model = {
-    ...record,
-    src: record.src
+    ...record
   }
 }
 </script>
