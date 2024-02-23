@@ -37,13 +37,14 @@
         title: '新增',
         width: 500,
         api: '/errr',
-        onSubmit: (values) => {
+        options: { labelCol: {span: 4} },
+        onSubmit: async (values) => {
             debugger
         },
         items: [
             {
                 label: "账号",
-                field: 'id',
+                field: 'name',
             },
             {
                 label: "密码",
@@ -61,7 +62,7 @@
       ...addConfig.value,
       title: `重置密码`,
       model: {},
-      onSubmit: (values) => {
+      onSubmit: async (values) => {
         debugger
       }
   })
@@ -70,8 +71,9 @@
     editConfig.value.items[0].inputOptions = {
       disabled: true
     }
+    editConfig.value.items[1].label = "重置密码"
     editConfig.value.model = {
-      id: "1234"
+      ...record
     }
   }
   </script>

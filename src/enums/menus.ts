@@ -35,7 +35,7 @@ export default [
         children: [
             {
                 label: "系统配置",
-                key: '/manager-system/config'
+                key: '/manager-system-config'
             },
             {
                 label: "角色管理",

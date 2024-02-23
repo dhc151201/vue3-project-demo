@@ -55,6 +55,10 @@ const router = createRouter({
     {
       path: "/manager-role",
       component: () => import('@/views/manager-role/index.vue'),
+    },
+    {
+      path: "/manager-system-config",
+      component: () => import('@/views/manager-system-config/index.vue'),
     }
   ]
 })

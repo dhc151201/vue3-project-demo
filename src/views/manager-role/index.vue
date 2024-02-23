@@ -12,7 +12,7 @@
       </DcTable>
     </a-card>
 
-    <a-modal v-model:open="openEmnus" title="菜单配置">
+    <a-modal v-model:open="openEmnus" :title="`[ ${editConfig?.model?.name} ] 菜单配置`">
       <a-tree
         class="mt-1"
         v-model:selectedKeys="selectedKeys"
@@ -42,33 +42,33 @@
       { title: "操作", slot: 'oper', width: 260, align: 'center' },
   ]
   
-    const addConfig = ref<ModelFormOptions>({
-        title: '新增',
-        width: 500,
-        api: '/errr',
-        onSubmit: (values) => {
-            debugger
-        },
-        items: [
-            {
-                label: "名称",
-                field: 'id',
-            }
-        ]
-    })
+  const addConfig = ref<ModelFormOptions>({
+      title: '新增',
+      width: 500,
+      api: '/errr',
+      onSubmit: async (values) => {
+          
+      },
+      items: [
+          {
+            label: "角色名称",
+            field: 'name',
+            required: true
+          }
+      ]
+  })
   const editConfig = ref<ModelFormOptions>({
       ...addConfig.value,
       title: `编辑`,
       model: {},
-      onSubmit: (values) => {
-        debugger
+      onSubmit:  async (values) => {
+        
       }
   })
   
   const handelEdit = (record: any) => {
     editConfig.value.model = {
-      ...record,
-      src: record.src
+      ...record
     }
   }
 
@@ -89,5 +89,8 @@
   const checkedKeys = ref<string[]>([]);
   const handelOpenEmnus = (record: any) => {
     openEmnus.value = true;
+    editConfig.value.model = {
+      ...record
+    }
   }
   </script>
