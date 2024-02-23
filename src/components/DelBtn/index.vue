@@ -1,5 +1,7 @@
 <template>
-    <a-button type="primary" danger size="small" @click="del" v-bind="$attrs">{{ t('btn.delete') }}</a-button>
+    <a-button type="primary" danger size="small" @click="del" v-bind="$attrs">
+        <slot>{{ t('btn.delete') }}</slot>
+    </a-button>
 </template>
 <script setup lang="ts">
 import useRequest from "@/hooks/useRequest"

@@ -35,6 +35,7 @@ declare module 'vue' {
     ATable: typeof import('ant-design-vue/es')['Table']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
+    ATree: typeof import('ant-design-vue/es')['Tree']
     AUpload: typeof import('ant-design-vue/es')['Upload']
     Catch: typeof import('./src/components/Flow/catch.vue')['default']
     Copy: typeof import('./src/components/Flow/copy.vue')['default']

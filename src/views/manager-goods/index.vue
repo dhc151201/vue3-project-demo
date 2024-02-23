@@ -16,7 +16,7 @@
         <ModelFormBtn :config="editConfig" size="small" ghost @click="handelEdit(record)">编辑</ModelFormBtn>
         <a-button type="primary" size="small" ghost>置顶</a-button>
         <a-button type="primary" size="small" ghost>上下架</a-button>
-        <a-button type="primary" size="small" ghost danger>删除</a-button>
+        <DelBtn ghost api="" :query="{}"></DelBtn>
       </template>
     </DcTable>
   </a-card>

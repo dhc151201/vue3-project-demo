@@ -12,6 +12,7 @@
       <DcTable ref="refTable" :columns="columns" :query="query">
         <template #oper="{record}">
           <ModelFormBtn :config="editConfig" size="small" ghost @click="handelEdit(record)">重置密码</ModelFormBtn>
+          <DelBtn ghost api="" :query="{}"></DelBtn>
         </template>
       </DcTable>
     </a-card>
@@ -66,9 +67,11 @@
   })
   
   const handelEdit = (record: any) => {
+    editConfig.value.items[0].inputOptions = {
+      disabled: true
+    }
     editConfig.value.model = {
-      ...record,
-      src: record.src
+      id: "1234"
     }
   }
   </script>

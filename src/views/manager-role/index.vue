@@ -6,15 +6,28 @@
       <DcTable ref="refTable" :columns="columns" :query="query">
         <template #oper="{record}">
           <ModelFormBtn :config="editConfig" size="small" ghost @click="handelEdit(record)">编辑</ModelFormBtn>
-          <ModelFormBtn :config="editConfig" size="small" ghost @click="handelEdit(record)">菜单配置</ModelFormBtn>
-          <a-button type="primary" size="small" ghost danger>删除</a-button>
+          <a-button type="primary" size="small" ghost  @click="handelOpenEmnus(record)">菜单配置</a-button>
+          <DelBtn ghost api="" :query="{}"></DelBtn>
         </template>
       </DcTable>
     </a-card>
+
+    <a-modal v-model:open="openEmnus" title="菜单配置">
+      <a-tree
+        class="mt-1"
+        v-model:selectedKeys="selectedKeys"
+        v-model:checkedKeys="checkedKeys"
+        autoExpandParent
+        defaultExpandAll
+        checkable
+        :tree-data="treeData"
+      ></a-tree>
+    </a-modal>
   </template>
   <script setup lang="ts">
   import { ref } from "vue";
   import type { TableColumns, ModelFormOptions } from "@/types/index"
+  import menus from "@/enums/menus"
   
   const query = ref<{keyword: string}>({keyword: ''})
   const refTable = ref()
@@ -57,5 +70,24 @@
       ...record,
       src: record.src
     }
+  }
+
+  const openEmnus = ref(false)
+  const treeData = menus.map(item => {
+    return {
+        title: item.label,
+        key: item.key,
+        children: item.children?.map(item => {
+        return {
+          title: item.label,
+          key: item.key
+        }
+      })
+    }
+  })
+  const selectedKeys = ref<string[]>([]);
+  const checkedKeys = ref<string[]>([]);
+  const handelOpenEmnus = (record: any) => {
+    openEmnus.value = true;
   }
   </script>

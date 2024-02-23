@@ -7,12 +7,12 @@
       <template #oper="{record}">
         <ModelTableBtn size="small" ghost :config="{ title: '资金记录', width: 1100 }" :columns="capitalColumns">资金记录
           <template #oper>
-            <a-button type="primary" size="small" ghost danger>删除资金记录</a-button>
+            <DelBtn ghost api="" :query="{}">删除资金记录</DelBtn>
           </template>
         </ModelTableBtn>
         <ModelTableBtn size="small" ghost :config="{ title: '充值记录', width: 1100 }" :columns="rechargeColumns">充值记录
           <template #oper>
-            <a-button type="primary" size="small" ghost danger>删除充值记录</a-button>
+            <DelBtn ghost api="" :query="{}">删除充值记录</DelBtn>
           </template>
         </ModelTableBtn>
       </template>

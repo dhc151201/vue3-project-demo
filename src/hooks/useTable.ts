@@ -47,7 +47,9 @@ export const useWatchOper = () => {
  */
 export const useData = (props: any) => {
     const dataSource = ref<{items?: Record[], meta?: Record}>({})
-    const dataList = ref<Record[]>([])
+    const dataList = ref<Record[]>([
+        {}, {}, {}, {}
+    ])
     const pagination = ref<{ page: number, limit: number, total: number }>({ page: 1, limit: 10, total: 0 })
     const { loading, run: getTableData, cancel } = useRequest(props.api, {
         manual: true,

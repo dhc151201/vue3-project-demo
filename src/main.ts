@@ -12,6 +12,7 @@ import ModelTableBtn from "@/components/ModelTable/index.vue"
 import BtnExport from "@/components/Export/index.vue"
 import DcTable from "@/components/Table/index.vue"
 import DcSelect from "@/components/Select/index.vue"
+import DelBtn from "@/components/DelBtn/index.vue"
 
 const app = createApp(App)
 app.use(i18n)
@@ -24,5 +25,6 @@ app.component('ModelFormBtn', ModelFormBtn)
 app.component('DcTable', DcTable)
 app.component('BtnExport', BtnExport)
 app.component('DcSelect', DcSelect)
+app.component('DelBtn', DelBtn)
 
 app.mount('#app')
