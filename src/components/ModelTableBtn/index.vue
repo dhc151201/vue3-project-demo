@@ -46,7 +46,4 @@ onMounted(() => {
         justify-content: end;
         padding-top: 1rem;
     }
-    .ant-btn + .ant-btn{
-        margin-left: 1rem;
-    }
 </style>

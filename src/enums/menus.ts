@@ -34,15 +34,27 @@ export default [
         ]
     },
     {
-        label: "转账资金管理",
-        key: '/manager-widthdraw',
+        label: "提现中心",
         children: [
             {
-                label: "转账列表",
+                label: "提现管理",
                 key: '/manager-widthdraw/list'
             },
             {
-                label: "转账资料管理",
+                label: "提现资料管理",
+                key: '/manager-widthdraw/information'
+            }
+        ]
+    },
+    {
+        label: "转账资金管理",
+        children: [
+            {
+                label: "转账列表",
+                key: '/manager-transfer-accounts'
+            },
+            {
+                label: "转账资料",
                 key: '/manager-widthdraw/information'
             }
         ]

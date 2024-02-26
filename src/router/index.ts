@@ -67,6 +67,10 @@ const router = createRouter({
     {
       path: "/manager-system-config",
       component: () => import('@/views/manager-system-config/index.vue'),
+    },
+    {
+      path: "/manager-transfer-accounts",
+      component: () => import('@/views/manager-transfer-accounts/index.vue'),
     }
   ]
 })
