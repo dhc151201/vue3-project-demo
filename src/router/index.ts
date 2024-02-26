@@ -37,6 +37,10 @@ const router = createRouter({
       component: () => import('@/views/manager-spread/index.vue'),
     },
     {
+      path: "/manager-integral",
+      component: () => import('@/views/manager-spread/integral.vue'),
+    },
+    {
       path: '/manager-recharge',
       component: () => import('@/views/manager-recharge/index.vue'),
     },

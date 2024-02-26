@@ -1,5 +1,13 @@
 export default [
     {
+        label: "订单中心",
+        key: '/manager-order'
+    },
+    {
+        label: "充值中心",
+        key: '/manager-recharge'
+    },
+    {
         label: "商品管理",
         children: [
             {
@@ -13,16 +21,17 @@ export default [
         ]
     },
     {
-        label: "订单中心",
-        key: '/manager-order'
-    },
-    {
-        label: "充值中心",
-        key: '/manager-recharge'
-    },
-    {
         label: "推广中心",
-        key: '/manager-spread',
+        children: [
+            {
+                label: "推广员管理",
+                key: '/manager-spread'
+            },
+            {
+                label: "积分管理",
+                key: '/manager-integral'
+            },
+        ]
     },
     {
         label: "提现中心",
