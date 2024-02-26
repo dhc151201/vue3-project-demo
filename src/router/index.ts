@@ -25,6 +25,10 @@ const router = createRouter({
       component: () => import('@/views/manager-goods/index.vue'),
     },
     {
+      path: "/manager-goods-type",
+      component: () => import('@/views/manager-goods/type.vue'),
+    },
+    {
       path: '/manager-order',
       component: () => import('@/views/manager-orders/index.vue'),
     },

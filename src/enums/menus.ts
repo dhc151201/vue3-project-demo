@@ -1,7 +1,16 @@
 export default [
     {
-        label: "商品中心",
-        key: '/manager-goods'
+        label: "商品管理",
+        children: [
+            {
+                label: "商品列表",
+                key: '/manager-goods'
+            },
+            {
+                label: "商品分类",
+                key: '/manager-goods-type'
+            },
+        ]
     },
     {
         label: "订单中心",

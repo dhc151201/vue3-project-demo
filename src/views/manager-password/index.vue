@@ -9,7 +9,7 @@ const addConfig = ref<ModelFormOptions>({
     title: '密码修改',
     width: 600,
     api: '/errr',
-    options: { labelCol: { span: 5 } },
+    options: { labelCol: { span: 4 } },
     onSubmit: async (values) => {
         debugger
     },
@@ -20,13 +20,19 @@ const addConfig = ref<ModelFormOptions>({
             required: true
         },
         {
-            label: "重置密码",
+            label: "原始密码",
             field: 'name',
             type: "password",
             required: true
         },
         {
-            label: "确认重置密码",
+            label: "修改密码",
+            field: 'name',
+            type: "password",
+            required: true
+        },
+        {
+            label: "确认密码",
             field: 'name',
             type: "password",
             required: true

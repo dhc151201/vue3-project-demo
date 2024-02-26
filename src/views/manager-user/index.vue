@@ -43,12 +43,12 @@
         },
         items: [
             {
-                label: "账号",
+                label: "登陆账号",
                 field: 'name',
                 required: true
             },
             {
-                label: "密码",
+                label: "登陆密码",
                 field: 'name',
                 type: "password",
                 required: true
