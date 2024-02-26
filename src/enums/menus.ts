@@ -33,6 +33,7 @@ export default [
             },
         ]
     },
+    /*
     {
         label: "提现中心",
         children: [
@@ -46,6 +47,7 @@ export default [
             }
         ]
     },
+    */
     {
         label: "转账资金管理",
         children: [
