@@ -1,46 +1,51 @@
-# minerwatch-customer
+# minerwatch-vue3-vite
 
-This template should help get you started developing with Vue 3 in Vite.
+tip1: node版本要求：推荐使用16.14.0版本，建议使用nvm管理切换node版本。
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+tip2: 静态资源，将构建在dist目录下，web页面访问入口为index.html文件。
 
 ## Project Setup
 
+### 安装依赖包
+
 ```sh
-npm install
+pnpm install
 ```
 
-### Compile and Hot-Reload for Development
+#### 本地开发环境运行
 
 ```sh
-npm run dev
+pnpm dev
 ```
 
-### Type-Check, Compile and Minify for Production
+#### test环境构建
 
 ```sh
-npm run build
+pnpm build:test
+或者
+pnpm build-only:test
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+#### test-1 环境构建
 
 ```sh
-npm run lint
+pnpm build:test-1
+或者
+pnpm build-only:test-1
+```
+
+#### test-2 环境构建
+
+```sh
+pnpm build:test-2
+或者
+pnpm build-only:test-2
+```
+
+### 生产环境构建
+
+```sh
+pnpm build:prod
+或者
+pnpm build-only:prod
 ```
