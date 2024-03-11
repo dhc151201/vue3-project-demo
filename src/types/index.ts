@@ -4,7 +4,8 @@ export type Record = {
     [key: string]: any
 }
 
-type Method = "get"|"GET"|"delete"|"DELETE"|"head"|"HEAD"|"options"|"OPTIONS"|"post"|"POST"|"put"|"PUT"|"patch"|"PATCH"|"purge"|"PURGE"|"link"|"LINK"|"unlink"|"UNLINK";
+type Method = "get" | "GET" | "delete" | "DELETE" | "head" | "HEAD" | "options" | "OPTIONS" | "post" | "POST" | "put" | "PUT" | "patch" | "PATCH" | "purge" | "PURGE" | "link" | "LINK" | "unlink" | "UNLINK";
+export type RequestApi = string | Ref<string> | (() => string);
 export type RequestServer = (query: any, config:{cancelToken: any}) => Promise<unknown>;
 export type RequestConfig = {
     // 请求方式
@@ -16,19 +17,24 @@ export type RequestConfig = {
     // 监听哪些字段的变化，而自动发起请求
     refreshDeps?: string[];
     // 防抖时间
-    debounceInterval?: number; // todo
+    debounceInterval?: number;
     // 节流时间
-    throttleInterval?: number; // todo
+    throttleInterval?: number;
     // header配置
-    headers?: Record | (() => Record); // todo
+    headers?: Record | (() => Record);
     // 响应数据格式
-    responseType?: "json" | "blob"; // todo
+    responseType?: "json" | "blob";
     // loading延迟取消时间
     loadingDelay?: number;
     // 是否缓存接口数据
-    catch?: boolean; // todo
+    catch?: boolean;
     // 权限校验
-    auth?: string | string[] | (() => string | string[]); // todo
+    auth?: string | string[] | (() => string | string[]);
+    onBefore?: () => void
+    onSuccess?: (data: any) => void
+    onError?: (e: any) => void
+    onFinally?: (data: any) => void
+    loopInterval?: number
 }
 export type RequestResult = {
     loading: Ref<boolean>;
